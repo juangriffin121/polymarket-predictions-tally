@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS questions (
     tag TEXT,
     end_date DATETIME,
     description TEXT,
-    resolved BOOLEAN DEFAULT 0,  -- 0 = False, 1 = True
     outcome BOOLEAN DEFAULT NULL,  
     outcome_probs TEXT NOT NULL,  -- JSON array of probabilities
     outcomes TEXT NOT NULL  -- JSON array of possible outcomes

@@ -10,7 +10,6 @@ class Question:
     outcome_probs: List[float]
     outcomes: List[str]
     tag: str
-    resolved: bool
     outcome: Optional[bool]
     end_date: datetime
     description: str

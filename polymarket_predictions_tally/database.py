@@ -49,7 +49,6 @@ def insert_question(conn: sqlite3.Connection, question: Question):
             question.tag,
             question.end_date,
             question.description,
-            question.resolved,
             question.outcome,
             outcome_probs_json,
             outcomes_json,

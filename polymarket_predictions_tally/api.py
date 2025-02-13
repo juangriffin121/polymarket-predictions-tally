@@ -70,7 +70,6 @@ def get_question_from_entry(entry: dict, tag: str) -> Question:
         outcome_probs=[float(p) for p in json.loads(entry["outcomePrices"])],
         outcomes=json.loads(entry["outcomes"]),
         tag=tag,
-        resolved=False,
         outcome=None,
         end_date=datetime.fromisoformat(entry["endDate"].replace("Z", "+00:00")),
         description=entry["description"],

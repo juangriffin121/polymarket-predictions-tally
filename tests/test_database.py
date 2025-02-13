@@ -20,7 +20,6 @@ def test_insert_question():
             tag="weather",
             end_date=datetime(2025, 2, 14),
             description="Forecast for tomorrow",
-            resolved=False,
             outcome=None,
             outcome_probs=[0.7, 0.3],
             outcomes=["Yes", "No"],
@@ -46,10 +45,9 @@ def test_insert_question():
             2025, 2, 14
         )
         assert result[4] == "Forecast for tomorrow"
-        assert result[5] == False
-        assert result[6] == None
-        assert json.loads(result[7]) == [0.7, 0.3]  # Ensure probabilities match
-        assert json.loads(result[8]) == ["Yes", "No"]  # Ensure outcomes match
+        assert result[5] == None
+        assert json.loads(result[6]) == [0.7, 0.3]  # Ensure probabilities match
+        assert json.loads(result[7]) == ["Yes", "No"]  # Ensure outcomes match
 
 
 def test_insert_question_optional_fields():
@@ -67,7 +65,6 @@ def test_insert_question_optional_fields():
             tag="weather",
             end_date=datetime(2025, 3, 1),
             description="Sunny forecast",
-            resolved=False,
             outcome=None,
             outcome_probs=[],  # Empty list
             outcomes=[],  # Empty list
@@ -80,8 +77,8 @@ def test_insert_question_optional_fields():
 
         assert result is not None
         # Check that empty lists are stored as JSON "[]"
+        assert json.loads(result[6]) == []
         assert json.loads(result[7]) == []
-        assert json.loads(result[8]) == []
 
 
 def test_multiple_inserts():
@@ -98,7 +95,6 @@ def test_multiple_inserts():
             tag="weather",
             end_date=datetime(2025, 12, 25),
             description="Snow forecast",
-            resolved=False,
             outcome=None,
             outcome_probs=[0.3, 0.7],
             outcomes=["Yes", "No"],
@@ -110,7 +106,6 @@ def test_multiple_inserts():
             tag="weather",
             end_date=datetime(2025, 6, 1),
             description="Wind forecast",
-            resolved=False,
             outcome=None,
             outcome_probs=[0.6, 0.4],
             outcomes=["Yes", "No"],
@@ -138,7 +133,6 @@ def test_duplicate_id_insertion_fails():
             tag="weather",
             end_date=datetime(2025, 1, 1),
             description="Sunny forecast",
-            resolved=False,
             outcome=None,
             outcome_probs=[0.8, 0.2],
             outcomes=["Yes", "No"],
@@ -152,7 +146,6 @@ def test_duplicate_id_insertion_fails():
             tag="weather",
             end_date=datetime(2025, 1, 2),
             description="Rain forecast",
-            resolved=False,
             outcome=None,
             outcome_probs=[0.4, 0.6],
             outcomes=["Yes", "No"],

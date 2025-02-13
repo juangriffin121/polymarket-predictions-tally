@@ -1,17 +1,32 @@
 # Example usage:
-from polymarket_predictions_tally.api import get_events, get_question, get_questions
+import sqlite3
+from polymarket_predictions_tally.api import (
+    get_events,
+    get_question_raw,
+    get_questions,
+)
+from polymarket_predictions_tally.database import insert_question
 from polymarket_predictions_tally.utils import indent_lines
 
 
-if __name__ == "__main__":
-    questions = get_questions(tag="Politics")
-    for question in questions:
-        print(question)
-    # events = get_events("Politics")
-    # for event in events:
-    #     print(event)
-    #     for question in event.questions:
-    #         print(indent_lines(str(question)))
+def main():
+    with sqlite3.connect("./database/database.db") as conn:
+        questions = get_questions(tag="Politics", limit=3)
+        for question in questions:
+            insert_question(conn, question)
+            print(question)
 
-    # print("getting question 512337")
-    # print(get_question(id=512337))
+
+def main2():
+    events = get_events("Politics")
+    for event in events:
+        print(event)
+        for question in event.questions:
+            print(indent_lines(str(question)))
+
+    print("getting question 253727")
+    __import__("pprint").pprint(get_question_raw(id=253727))
+
+
+if __name__ == "__main__":
+    main()

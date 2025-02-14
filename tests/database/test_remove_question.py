@@ -8,6 +8,7 @@ from polymarket_predictions_tally.database import (
     remove_question,
 )
 from polymarket_predictions_tally.logic import Question
+from polymarket_predictions_tally.utils import assert_fails
 
 
 def test_remove_question():
@@ -56,8 +57,4 @@ def test_remove_non_existent_question():
 
         # Insert the question
         insert_question(conn, test_question)
-        try:
-            remove_question(conn, 5)
-            assert False
-        except:
-            pass
+        assert_fails(remove_question, conn, 5)

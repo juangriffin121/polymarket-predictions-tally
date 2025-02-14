@@ -16,6 +16,12 @@ def remove_user(conn: sqlite3.Connection, id: int):
     cursor.execute(insert_user_query, (id,))
 
 
+def update_user(conn: sqlite3.Connection, id: int, new_budget: int):
+    cursor = conn.cursor()
+    update_user_query = load_sql_query("./database/update_user.sql")
+    cursor.execute(update_user_query, (new_budget, id))
+
+
 def insert_user(conn: sqlite3.Connection, user: User):
     cursor = conn.cursor()
     insert_user_query = load_sql_query("./database/insert_user.sql")

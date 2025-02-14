@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from polymarket_predictions_tally.database import insert_question, load_sql_query
 from polymarket_predictions_tally.logic import Question
+from polymarket_predictions_tally.utils import assert_fails
 
 
 def test_insert_question():
@@ -152,8 +153,4 @@ def test_duplicate_id_insertion_fails():
         )
 
         # Assert that inserting the duplicate question raises an IntegrityError
-        try:
-            insert_question(conn, q_duplicate)
-            assert False, "Expected an IntegrityError, but insertion succeeded."
-        except sqlite3.IntegrityError:
-            pass  # Expected behavior
+        assert_fails(insert_question, conn, q_duplicate)

@@ -9,6 +9,7 @@ from polymarket_predictions_tally.database import (
     update_question,
 )
 from polymarket_predictions_tally.logic import Question
+from polymarket_predictions_tally.utils import assert_fails
 
 
 def test_update_existing_question_success():
@@ -79,11 +80,7 @@ def test_update_nonexistent_question():
             end_date=datetime(2025, 12, 31),
             description="This question does not exist",
         )
-        try:
-            update_question(conn, non_existent_question)
-            assert False
-        except:
-            pass
+        assert_fails(update_question, conn, non_existent_question)
 
 
 def test_multiple_updates():

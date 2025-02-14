@@ -2,6 +2,7 @@ import sqlite3
 
 from polymarket_predictions_tally.database import insert_user, load_sql_query
 from polymarket_predictions_tally.logic import User
+from polymarket_predictions_tally.utils import assert_fails
 
 
 def test_insert_user():
@@ -40,11 +41,7 @@ def test_insert_user_duplicate_id():
             username="JaneDoe",
             budget=500,
         )
-        try:
-            insert_user(conn, duplicate_user)
-            assert False, "Expected an IntegrityError for duplicate id"
-        except sqlite3.IntegrityError:
-            pass  # Expected behavior
+        assert_fails(insert_user, conn, duplicate_user)
 
 
 def test_insert_multiple_users():

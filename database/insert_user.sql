@@ -1,1 +1,1 @@
-INSERT INTO users (id, username, current_budget) VALUES (?, ?, ?);
+INSERT INTO users (id, username, budget) VALUES (?, ?, ?);

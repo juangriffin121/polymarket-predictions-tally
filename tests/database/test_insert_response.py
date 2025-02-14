@@ -1,6 +1,7 @@
 from datetime import datetime
 import sqlite3
 from polymarket_predictions_tally.database import (
+    has_user_answered,
     insert_question,
     insert_response,
     insert_user,
@@ -172,3 +173,36 @@ def test_insert_response_invalid_question():
         assert_fails_with_exception(
             insert_response, conn, invalid_response, expected_exception=InvalidResponse
         )
+
+
+def test_has_user_answered_returns_response():
+    """Test that has_user_answered returns a Response when a user has answered the question."""
+    with sqlite3.connect(":memory:") as conn:
+        setup_db(conn)
+        # Insert a response for user id=1 and question id=1.
+        response = Response(
+            id=1,  # For testing, you may specify the id.
+            user_id=1,
+            question_id=1,
+            answer="Yes",
+            timestamp=datetime.now(),
+            correct=True,
+            explanation="Test explanation",
+        )
+        insert_response(conn, response)
+
+        # Now check that has_user_answered returns a Response.
+        result = has_user_answered(conn, 1, 1)
+        assert result is not None
+        assert result.answer == "Yes"
+        assert result.user_id == 1
+        assert result.question_id == 1
+
+
+def test_has_user_answered_returns_none():
+    """Test that has_user_answered returns None when no response exists."""
+    with sqlite3.connect(":memory:") as conn:
+        setup_db(conn)
+        # Do not insert any response.
+        result = has_user_answered(conn, 1, 1)
+        assert result is None

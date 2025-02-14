@@ -11,28 +11,41 @@ from polymarket_predictions_tally.logic import (
 )
 
 
-# Function to load an SQL query from a file
 def load_sql_query(file_path: str) -> str:
     with open(file_path, "r") as f:
         return f.read()
+
+
+def has_user_answered(
+    conn: sqlite3.Connection, user_id: int, question_id: int
+) -> Response | None:
+    cursor = conn.cursor()
+    query = load_sql_query("./database/has_user_answered.sql")
+    cursor.execute(query, (user_id, question_id))
+    results = cursor.fetchone()
+    if results is not None:
+        return Response(*results)
 
 
 def remove_user(conn: sqlite3.Connection, id: int):
     cursor = conn.cursor()
     insert_user_query = load_sql_query("./database/remove_user.sql")
     cursor.execute(insert_user_query, (id,))
+    conn.commit()
 
 
 def update_user(conn: sqlite3.Connection, id: int, new_budget: int):
     cursor = conn.cursor()
     update_user_query = load_sql_query("./database/update_user.sql")
     cursor.execute(update_user_query, (new_budget, id))
+    conn.commit()
 
 
 def insert_user(conn: sqlite3.Connection, user: User):
     cursor = conn.cursor()
     insert_user_query = load_sql_query("./database/insert_user.sql")
     cursor.execute(insert_user_query, (user.id, user.username, user.budget))
+    conn.commit()
 
 
 def remove_event(conn: sqlite3.Connection, id: int):
@@ -41,6 +54,14 @@ def remove_event(conn: sqlite3.Connection, id: int):
 
 def insert_event(conn: sqlite3.Connection, event: Event):
     raise NotImplementedError
+
+
+def is_question_in_db(conn: sqlite3.Connection, question_id) -> bool:
+    query = load_sql_query("./database/is_question_in_db.sql")
+    cursor = conn.cursor()
+    cursor.execute(query, (question_id,))
+    results = cursor.fetchone()
+    return bool(results[0])
 
 
 def insert_response(conn: sqlite3.Connection, response: Response):
@@ -58,6 +79,7 @@ def insert_response(conn: sqlite3.Connection, response: Response):
         case (True, True):
             cursor = conn.cursor()
             cursor.execute(insert_response_query, params)
+            conn.commit()
         case (False, True):
             raise InvalidResponse(
                 f"Invalid Response: Invalid user_id: {response.user_id}"

@@ -2,7 +2,11 @@ import sqlite3
 import json
 
 from datetime import datetime
-from polymarket_predictions_tally.database import insert_question, load_sql_query
+from polymarket_predictions_tally.database import (
+    insert_question,
+    is_question_in_db,
+    load_sql_query,
+)
 from polymarket_predictions_tally.logic import Question
 from polymarket_predictions_tally.utils import assert_fails, parse_datetime
 
@@ -152,3 +156,26 @@ def test_duplicate_id_insertion_fails():
 
         # Assert that inserting the duplicate question raises an IntegrityError
         assert_fails(insert_question, conn, q_duplicate)
+
+
+def test_is_question_in_db():
+    with sqlite3.connect(":memory:") as conn:
+        start_db = load_sql_query("./database/setup.sql")
+        conn.executescript(start_db)
+
+        test_question = Question(
+            id=1,
+            question="Will it rain tomorrow?",
+            tag="weather",
+            end_date=datetime(2025, 2, 14),
+            description="Forecast for tomorrow",
+            outcome=None,
+            outcome_probs=[0.7, 0.3],
+            outcomes=["Yes", "No"],
+        )
+
+        assert is_question_in_db(conn, 1) == False  # Question not in DB yet
+
+        insert_question(conn, test_question)
+
+        assert is_question_in_db(conn, 1) == True  # Now it should be in DB

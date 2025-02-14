@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
+from enum import StrEnum
+from typing import List, Optional, Tuple
+
+from polymarket_predictions_tally.utils import parse_datetime
 
 
 @dataclass
@@ -57,6 +60,32 @@ class Response:
     timestamp: datetime
     correct: Optional[bool]
     explanation: Optional[str]
+
+    @classmethod
+    def from_database_entry(
+        cls, entry: Tuple[int, int, int, str, str, Optional[bool], Optional[str]]
+    ) -> "Response":
+        (
+            response_id,
+            user_id,
+            question_id,
+            answer,
+            timestamp,
+            correct,
+            explanation,
+        ) = entry
+
+        timestamp = parse_datetime(timestamp)
+
+        return cls(
+            response_id,
+            user_id,
+            question_id,
+            answer,
+            timestamp,
+            correct,
+            explanation,
+        )
 
 
 class InvalidResponse(Exception):

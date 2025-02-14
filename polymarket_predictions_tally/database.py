@@ -15,7 +15,9 @@ def remove_user(conn: sqlite3.Connection, id: int):
 
 
 def insert_user(conn: sqlite3.Connection, user: User):
-    raise NotImplementedError
+    cursor = conn.cursor()
+    insert_user_query = load_sql_query("./database/insert_user.sql")
+    cursor.execute(insert_user_query, (user.id, user.username, user.budget))
 
 
 def remove_event(conn: sqlite3.Connection, id: int):

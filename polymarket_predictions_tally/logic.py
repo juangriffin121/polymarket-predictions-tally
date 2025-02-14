@@ -41,6 +41,7 @@ class Event:
         return f"Event {self.id}: {self.title} (Ends: {date_str}) | {len(self.questions)} questions"
 
 
+@dataclass
 class User:
     id: int
     username: str

@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS responses (
     answer TEXT NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     correct BOOLEAN DEFAULT NULL,  
+    explanation TEXT DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (question_id) REFERENCES questions(id)
 );

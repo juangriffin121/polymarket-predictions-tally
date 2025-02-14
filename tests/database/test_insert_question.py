@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from polymarket_predictions_tally.database import insert_question, load_sql_query
 from polymarket_predictions_tally.logic import Question
-from polymarket_predictions_tally.utils import assert_fails
+from polymarket_predictions_tally.utils import assert_fails, parse_datetime
 
 
 def test_insert_question():
@@ -42,9 +42,7 @@ def test_insert_question():
         assert result[0] == 10
         assert result[1] == "Will it rain tomorrow?"  # Check question text
         assert result[2] == "weather"
-        assert datetime.strptime(result[3], "%Y-%m-%d %H:%M:%S") == datetime(
-            2025, 2, 14
-        )
+        assert parse_datetime(result[3]) == datetime(2025, 2, 14)
         assert result[4] == "Forecast for tomorrow"
         assert result[5] == None
         assert json.loads(result[6]) == [0.7, 0.3]  # Ensure probabilities match

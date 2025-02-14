@@ -49,10 +49,15 @@ class User:
 
 
 @dataclass
-class response:
+class Response:
     id: int
     user_id: int
     question_id: int
     answer: str
     timestamp: datetime
     correct: Optional[bool]
+    explanation: Optional[str]
+
+
+class InvalidResponse(Exception):
+    pass

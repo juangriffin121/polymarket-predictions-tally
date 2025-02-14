@@ -9,7 +9,7 @@ from polymarket_predictions_tally.database import (
     update_question,
 )
 from polymarket_predictions_tally.logic import Question
-from polymarket_predictions_tally.utils import assert_fails
+from polymarket_predictions_tally.utils import assert_fails, parse_datetime
 
 
 def test_update_existing_question_success():
@@ -58,7 +58,7 @@ def test_update_existing_question_success():
         assert result[1] == "Updated question?"
         assert result[2] == "updated_tag"
         # Convert the stored datetime string into a datetime object for comparison
-        assert datetime.strptime(result[3], "%Y-%m-%d %H:%M:%S") == datetime(2025, 2, 2)
+        assert parse_datetime(result[3]) == datetime(2025, 2, 2)
         assert result[4] == "Updated description"
         assert result[5]
         assert json.loads(result[6]) == [0.7, 0.3]
@@ -135,9 +135,7 @@ def test_multiple_updates():
         assert result1 is not None
         assert result1[1] == "Updated question one?"
         assert result1[2] == "updated_tag1"
-        assert datetime.strptime(result1[3], "%Y-%m-%d %H:%M:%S") == datetime(
-            2025, 1, 10
-        )
+        assert parse_datetime(result1[3]) == datetime(2025, 1, 10)
         assert result1[4] == "Updated first question"
         assert result1[5]
         assert json.loads(result1[6]) == [0.9, 0.1]
@@ -147,9 +145,7 @@ def test_multiple_updates():
         assert result2 is not None
         assert result2[1] == "Question two?"
         assert result2[2] == "tag2"
-        assert datetime.strptime(result2[3], "%Y-%m-%d %H:%M:%S") == datetime(
-            2025, 1, 2
-        )
+        assert parse_datetime(result2[3]) == datetime(2025, 1, 2)
         assert result2[4] == "Second question"
         assert not result2[5]
         assert json.loads(result2[6]) == [0.3, 0.7]

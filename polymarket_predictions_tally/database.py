@@ -26,12 +26,16 @@ def insert_event(conn: sqlite3.Connection, event: Event):
     raise NotImplementedError
 
 
+def update_question(conn: sqlite3.Connection, question: Question):
+    remove_question(conn, question.id)
+    insert_question(conn, question)
+
+
 def remove_question(conn: sqlite3.Connection, id: int):
-    raise NotImplementedError
-
-
-def edit_question(conn: sqlite3.Connection, id: int):
-    raise NotImplementedError
+    remove_question_query = load_sql_query("./database/remove_question.sql")
+    cursor = conn.cursor()
+    cursor.execute(remove_question_query, (id,))
+    conn.commit()
 
 
 def insert_question(conn: sqlite3.Connection, question: Question):

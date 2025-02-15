@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from typing import List, Tuple
+from typing import List
 
 from polymarket_predictions_tally.logic import (
     Event,
@@ -96,7 +96,7 @@ def insert_response(conn: sqlite3.Connection, response: Response):
 
 def validate_response(
     conn: sqlite3.Connection, response: Response
-) -> Tuple[bool, bool]:
+) -> tuple[bool, bool]:
     user_ids = get_user_ids(conn)
     questions_ids = get_question_ids(conn)
     return (response.user_id in user_ids, response.question_id in questions_ids)
@@ -121,6 +121,12 @@ def get_question_ids(conn: sqlite3.Connection) -> List[int]:
 def update_question(conn: sqlite3.Connection, question: Question):
     remove_question(conn, question.id)
     insert_question(conn, question)
+
+
+def update_present_questions(conn: sqlite3.Connection, api_questions: List[Question]):
+    for question in api_questions:
+        if is_question_in_db(conn, question.id):
+            update_question(conn, question)
 
 
 def remove_question(conn: sqlite3.Connection, id: int):

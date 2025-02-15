@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from enum import StrEnum
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 from polymarket_predictions_tally.utils import parse_datetime
 
@@ -63,7 +62,7 @@ class Response:
 
     @classmethod
     def from_database_entry(
-        cls, entry: Tuple[int, int, int, str, str, Optional[bool], Optional[str]]
+        cls, entry: tuple[int, int, int, str, str, Optional[bool], Optional[str]]
     ) -> "Response":
         (
             response_id,

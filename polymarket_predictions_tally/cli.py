@@ -1,31 +1,9 @@
 from datetime import datetime
-import sqlite3
 from typing import List, Optional
 
 import click
 
-from polymarket_predictions_tally.database import (
-    has_user_answered,
-    update_present_questions,
-)
 from polymarket_predictions_tally.logic import Question, Response, User
-
-
-def process_prediction(
-    conn: sqlite3.Connection,
-    user: User,
-    api_questions: List[Question],
-    mode: str = "predict",
-) -> Optional[Response]:
-    update_present_questions(conn, api_questions)
-    previous_user_responses = []
-    for question in api_questions:
-        response = has_user_answered(conn, user.id, question.id)
-        previous_user_responses.append(response)
-    [chosen_question, previous_user_response] = prompt_question_selection(
-        api_questions, previous_user_responses, mode
-    )
-    return prompt_for_response(chosen_question, previous_user_response)
 
 
 def prompt_question_selection(
@@ -77,8 +55,9 @@ def get_response(user: User, question: Question) -> Response:
         answer = "No"
 
     if click.confirm("Do you wish to give an explanation for your choice?"):
-        click.echo("Write your explanation below")
         explanation = click.edit("")
+        if explanation == "":
+            explanation = None
     else:
         explanation = None
 

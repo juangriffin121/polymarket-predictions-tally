@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from typing import List
+from typing import List, Optional
 
 from polymarket_predictions_tally.logic import (
     Event,
@@ -25,6 +25,18 @@ def has_user_answered(
     results = cursor.fetchone()
     if results is not None:
         return Response(*results)
+
+
+def get_previous_user_responses(
+    conn: sqlite3.Connection,
+    api_questions: list[Question],
+    user_id: int,
+) -> list[Optional[Response]]:
+    previous_user_responses = []
+    for question in api_questions:
+        response = has_user_answered(conn, user_id, question.id)
+        previous_user_responses.append(response)
+    return previous_user_responses
 
 
 def remove_user(conn: sqlite3.Connection, id: int):

@@ -10,6 +10,8 @@ from polymarket_predictions_tally.cli import get_response
 from polymarket_predictions_tally.database import insert_question, load_sql_query
 from polymarket_predictions_tally.logic import Question, Response, User
 from polymarket_predictions_tally.utils import indent_lines
+from tests.cli.test_get_response import get_response_cmd
+from tests.cli.test_prompt_question_selection import select_question_cmd
 
 
 def clear(conn: sqlite3.Connection):
@@ -29,19 +31,12 @@ def clear(conn: sqlite3.Connection):
 
 
 def main3():
-    user = User(id=1, username="griffin", budget=100)
+    response = get_response_cmd()
+    print(response)
 
-    question = Question(
-        id=2,
-        question="Will Julius Caesar win the 100 BC roman dictatorial election?",
-        outcome_probs=[90.0, 10.0],
-        outcomes=["Yes", "No"],
-        end_date=datetime(100, 10, 10),
-        outcome=None,
-        description="",
-        tag="Politics",
-    )
-    response = get_response(user, question)
+
+def main4():
+    response = select_question_cmd()
     print(response)
 
 
@@ -66,4 +61,4 @@ def main2():
 
 
 if __name__ == "__main__":
-    main3()
+    main4()

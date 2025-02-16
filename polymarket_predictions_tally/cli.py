@@ -1,3 +1,4 @@
+from datetime import datetime
 import sqlite3
 from typing import List, Optional
 
@@ -47,7 +48,7 @@ def prompt_question_selection(
 
 
 def prompt_for_response(
-    question: Question, previous_response: Optional[Response]
+    user: User, question: Question, previous_response: Optional[Response]
 ) -> Optional[Response]:
     """
     Prompts the user for an answer to the given question.
@@ -58,4 +59,34 @@ def prompt_for_response(
     If the user chooses not to change their answer, return None.
     Otherwise, prompt the user to provide a new answer (e.g. "yes" or "no") and return it.
     """
-    raise NotImplementedError
+    click.echo(f"{question.question}")
+    if previous_response is not None:
+        click.echo(f"You answered [{previous_response.answer}] before")
+        click.echo(f"Your explanation for it was:\n\t{previous_response.explanation}")
+        if click.confirm("Do you wish to change anything about your previous answer?"):
+            return get_response(user, question)
+        else:
+            return None
+    return get_response(user, question)
+
+
+def get_response(user: User, question: Question) -> Response:
+    if click.confirm(question.question):
+        answer = "Yes"
+    else:
+        answer = "No"
+
+    if click.confirm("Do you wish to give an explanation for your choice?"):
+        click.echo("Write your explanation below")
+        explanation = click.edit("")
+    else:
+        explanation = None
+
+    return Response(
+        user_id=user.id,
+        question_id=question.id,
+        answer=answer,
+        timestamp=datetime.now(),
+        correct=None,
+        explanation=explanation,
+    )

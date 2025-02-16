@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
-    budget REAL DEFAULT 0
+    budget REAL DEFAULT 1000000
     -- Add additional fields as needed (e.g., stats)
 );
 

@@ -29,7 +29,7 @@ def get_question_raw(id: int) -> dict:
     return response.json()
 
 
-def get_question(id: int, tag: str) -> Question:
+def get_question(id: int, tag: str) -> Question | None:
     question = get_question_raw(id)
     return get_question_from_entry(question, tag)
 
@@ -59,11 +59,22 @@ def get_questions_from_data(tag: str, data: List[dict]) -> List[Question]:
     for entry in data:
         if not entry.get("active"):
             continue
-        questions.append(get_question_from_entry(entry, tag))
+        question = get_question_from_entry(entry, tag)
+        if not question:
+            continue
+        questions.append(question)
     return questions
 
 
-def get_question_from_entry(entry: dict, tag: str) -> Question:
+def get_question_from_entry(entry: dict, tag: str) -> Question | None:
+    try:
+        end_date = datetime.fromisoformat(entry["endDate"].replace("Z", "+00:00"))
+    except:
+        try:
+            end_date = datetime.fromisoformat(entry["endDateIso"])
+        except:
+            return None
+
     return Question(
         id=int(entry["id"]),
         question=entry["question"],
@@ -71,7 +82,7 @@ def get_question_from_entry(entry: dict, tag: str) -> Question:
         outcomes=json.loads(entry["outcomes"]),
         tag=tag,
         outcome=None,
-        end_date=datetime.fromisoformat(entry["endDate"].replace("Z", "+00:00")),
+        end_date=end_date,
         description=entry["description"],
     )
 

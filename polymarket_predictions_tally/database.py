@@ -1,6 +1,7 @@
 import json
 import sqlite3
 from typing import List, Optional
+import typing
 
 from polymarket_predictions_tally.logic import (
     Event,
@@ -14,6 +15,37 @@ from polymarket_predictions_tally.logic import (
 def load_sql_query(file_path: str) -> str:
     with open(file_path, "r") as f:
         return f.read()
+
+
+def get_user(conn: sqlite3.Connection, username: str) -> User | None:
+    cursor = conn.cursor()
+    query = load_sql_query("./database/get_user.sql")
+    cursor.execute(query, (username,))
+    results = cursor.fetchone()
+    if results is not None:
+        return User(*results)
+
+
+def get_or_make_user(conn: sqlite3.Connection, username: str) -> User:
+    user = get_user(conn, username)
+    if user:
+        return user
+    else:
+        insert_user_by_name(conn, username)
+        user = get_user(conn, username)
+        if user:
+            return user
+        else:
+            raise Exception("Unreachable code")
+
+
+# MAKE TESTS FOR IT
+def insert_user_by_name(conn: sqlite3.Connection, username: str):
+    print("MAKE TESTS FOR INSERT_USER_BY_NAME AND REPLACE INSERT_USER!!!!")
+    cursor = conn.cursor()
+    query = load_sql_query("./database/insert_user_by_name.sql")
+    cursor.execute(query, (username,))
+    conn.commit()
 
 
 def has_user_answered(

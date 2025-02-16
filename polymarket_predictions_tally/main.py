@@ -3,7 +3,7 @@ from polymarket_predictions_tally.api import (
     get_questions,
 )
 from polymarket_predictions_tally.database import insert_question
-from tests.cli.test_process_prediction import process_prediction_cmd
+from cli.command import cli
 
 
 def clear(conn: sqlite3.Connection):
@@ -32,5 +32,4 @@ def main():
 
 
 if __name__ == "__main__":
-    response = process_prediction_cmd()
-    __import__("pprint").pprint(response)
+    cli()

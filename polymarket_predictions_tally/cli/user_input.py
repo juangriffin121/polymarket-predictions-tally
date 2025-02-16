@@ -11,7 +11,7 @@ def process_prediction(
     api_questions: list[Question],
     previous_user_responses: list[Optional[Response]],
     mode: str = "predict",
-) -> Optional[Response]:
+) -> tuple[Question, Optional[Response]]:
     [chosen_question, previous_user_response] = prompt_question_selection(
         api_questions, previous_user_responses, mode
     )
@@ -39,7 +39,7 @@ def prompt_question_selection(
 
 def prompt_for_response(
     user: User, question: Question, previous_response: Optional[Response]
-) -> Optional[Response]:
+) -> tuple[Question, Optional[Response]]:
     """
     Prompts the user for an answer to the given question.
 
@@ -54,10 +54,10 @@ def prompt_for_response(
         click.echo(f"You answered [{previous_response.answer}] before")
         click.echo(f"Your explanation for it was:\n\t{previous_response.explanation}")
         if click.confirm("Do you wish to change anything about your previous answer?"):
-            return get_response(user, question)
+            return question, get_response(user, question)
         else:
-            return None
-    return get_response(user, question)
+            return question, None
+    return question, get_response(user, question)
 
 
 def get_response(user: User, question: Question) -> Response:

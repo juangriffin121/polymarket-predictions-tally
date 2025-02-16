@@ -2,7 +2,7 @@ from datetime import datetime
 import click
 from click.testing import CliRunner
 
-from polymarket_predictions_tally.cli import process_prediction
+from polymarket_predictions_tally.cli.user_input import process_prediction
 from polymarket_predictions_tally.logic import Question, Response, User
 
 

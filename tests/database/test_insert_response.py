@@ -46,7 +46,6 @@ def test_insert_valid_response():
         setup_db(conn)
         now = datetime.now()
         response = Response(
-            id=1,
             user_id=1,
             question_id=1,
             answer="Yes",
@@ -57,7 +56,10 @@ def test_insert_valid_response():
         insert_response(conn, response)
 
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM responses WHERE id = ?", (response.id,))
+        cursor.execute(
+            "SELECT * FROM responses WHERE user_id = ? AND question_id = ?",
+            (response.user_id, response.question_id),
+        )
 
         result = cursor.fetchone()
 
@@ -76,7 +78,6 @@ def test_insert_duplicate_response():
         setup_db(conn)
 
         response = Response(
-            id=1,
             user_id=1,
             question_id=1,
             answer="Yes",
@@ -87,7 +88,6 @@ def test_insert_duplicate_response():
         insert_response(conn, response)
 
         response2 = Response(
-            id=1,
             user_id=1,
             question_id=1,
             answer="No",
@@ -104,7 +104,6 @@ def test_insert_multiple_response():
         setup_db(conn)
 
         response = Response(
-            id=1,
             user_id=1,
             question_id=1,
             answer="Yes",
@@ -115,10 +114,9 @@ def test_insert_multiple_response():
         insert_response(conn, response)
 
         response2 = Response(
-            id=4,
             user_id=1,
             question_id=1,
-            answer="Yes",
+            answer="Maybe",
             timestamp=datetime.now(),
             correct=None,
             explanation=None,
@@ -140,7 +138,6 @@ def test_insert_response_invalid_user():
 
         # Create a Response with a user_id that does not exist (999) but with a valid question id (1)
         invalid_response = Response(
-            id=1,
             user_id=999,  # Invalid user id
             question_id=1,
             answer="Yes",
@@ -162,7 +159,6 @@ def test_insert_response_invalid_question():
 
         # Create a Response with a valid user id (1) but an invalid question id (999)
         invalid_response = Response(
-            id=2,
             user_id=1,
             question_id=999,  # Invalid question id
             answer="No",
@@ -181,7 +177,6 @@ def test_has_user_answered_returns_response():
         setup_db(conn)
         # Insert a response for user id=1 and question id=1.
         response = Response(
-            id=1,  # For testing, you may specify the id.
             user_id=1,
             question_id=1,
             answer="Yes",

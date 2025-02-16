@@ -52,7 +52,6 @@ class User:
 
 @dataclass
 class Response:
-    id: int
     user_id: int
     question_id: int
     answer: str
@@ -62,10 +61,9 @@ class Response:
 
     @classmethod
     def from_database_entry(
-        cls, entry: tuple[int, int, int, str, str, Optional[bool], Optional[str]]
+        cls, entry: tuple[int, int, str, str, Optional[bool], Optional[str]]
     ) -> "Response":
         (
-            response_id,
             user_id,
             question_id,
             answer,
@@ -77,7 +75,6 @@ class Response:
         timestamp = parse_datetime(timestamp)
 
         return cls(
-            response_id,
             user_id,
             question_id,
             answer,

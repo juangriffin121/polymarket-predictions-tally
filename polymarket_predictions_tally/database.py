@@ -66,7 +66,6 @@ def is_question_in_db(conn: sqlite3.Connection, question_id) -> bool:
 
 def insert_response(conn: sqlite3.Connection, response: Response):
     params = (
-        response.id,
         response.user_id,
         response.question_id,
         response.answer,

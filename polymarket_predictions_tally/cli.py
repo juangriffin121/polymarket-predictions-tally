@@ -6,6 +6,18 @@ import click
 from polymarket_predictions_tally.logic import Question, Response, User
 
 
+def process_prediction(
+    user: User,
+    api_questions: list[Question],
+    previous_user_responses: list[Optional[Response]],
+    mode: str = "predict",
+) -> Optional[Response]:
+    [chosen_question, previous_user_response] = prompt_question_selection(
+        api_questions, previous_user_responses, mode
+    )
+    return prompt_for_response(user, chosen_question, previous_user_response)
+
+
 def prompt_question_selection(
     questions: List[Question], responses: list[Optional[Response]], mode: str
 ) -> tuple[Question, Optional[Response]]:

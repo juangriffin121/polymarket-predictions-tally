@@ -3,26 +3,22 @@ from typing import Optional
 
 from polymarket_predictions_tally.api import get_questions
 from polymarket_predictions_tally.cli import (
-    prompt_for_response,
-    prompt_question_selection,
+    process_prediction,
 )
 from polymarket_predictions_tally.database import (
     get_previous_user_responses,
+    insert_response,
     update_present_questions,
 )
 from polymarket_predictions_tally.logic import Question, Response, User
 
 
-def process_prediction(
-    conn: sqlite3.Connection,
-    user: User,
-    api_questions: list[Question],
-    mode: str = "predict",
-) -> Optional[Response]:
+def run_user_session(conn: sqlite3.Connection, user: User, mode: str = "predict"):
+    api_questions = get_questions(tag="Politics", limit=10)
     update_present_questions(conn, api_questions)
     previous_user_responses = get_previous_user_responses(conn, api_questions, user.id)
-    [chosen_question, previous_user_response] = prompt_question_selection(
-        api_questions, previous_user_responses, mode
+    response = process_prediction(
+        conn, user, api_questions, previous_user_responses, mode
     )
-    return prompt_for_response(user, chosen_question, previous_user_response)
-
+    if response is not None:
+        insert_response(conn, response)

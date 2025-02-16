@@ -11,6 +11,7 @@ from polymarket_predictions_tally.database import insert_question, load_sql_quer
 from polymarket_predictions_tally.logic import Question, Response, User
 from polymarket_predictions_tally.utils import indent_lines
 from tests.cli.test_get_response import get_response_cmd
+from tests.cli.test_process_prediction import process_prediction_cmd
 from tests.cli.test_prompt_question_selection import select_question_cmd
 
 
@@ -30,16 +31,6 @@ def clear(conn: sqlite3.Connection):
     conn.commit()
 
 
-def main3():
-    response = get_response_cmd()
-    print(response)
-
-
-def main4():
-    response = select_question_cmd()
-    print(response)
-
-
 def main():
     with sqlite3.connect("./database/database.db") as conn:
         clear(conn)
@@ -49,16 +40,6 @@ def main():
             insert_question(conn, question)
 
 
-def main2():
-    events = get_events("Politics")
-    for event in events:
-        print(event)
-        for question in event.questions:
-            print(indent_lines(str(question)))
-
-    print("getting question 253727")
-    __import__("pprint").pprint(get_question_raw(id=253727))
-
-
 if __name__ == "__main__":
-    main4()
+    response = process_prediction_cmd()
+    __import__("pprint").pprint(response)

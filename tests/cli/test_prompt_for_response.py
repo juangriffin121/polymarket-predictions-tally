@@ -28,7 +28,7 @@ def prompt_for_response_cmd():
         explanation=None,
     )
 
-    new_response = prompt_for_response(user, question, previous_response)
+    _, new_response = prompt_for_response(user, question, previous_response)
     if new_response is not None:
         click.echo(f"Your new answer: {new_response.answer}")
     else:
@@ -61,7 +61,7 @@ def prompt_for_response_cmd_no_prev():
         tag="Politics",
     )
 
-    new_response = prompt_for_response(user, question, previous_response=None)
+    _, new_response = prompt_for_response(user, question, previous_response=None)
     if new_response is not None:
         click.echo(f"Your new answer: {new_response.answer}")
     else:

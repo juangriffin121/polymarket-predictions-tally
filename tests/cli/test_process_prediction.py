@@ -37,7 +37,7 @@ def process_prediction_cmd():
         correct=None,
         explanation=None,
     )
-    response = process_prediction(
+    _, response = process_prediction(
         user, [question1, question2], [None, previous_response]
     )
     if response is not None:

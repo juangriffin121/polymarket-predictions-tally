@@ -1,16 +1,16 @@
 from datetime import datetime
 import sqlite3
-from polymarket_predictions_tally.database import (
-    has_user_answered,
+from polymarket_predictions_tally.database.read import has_user_answered
+from polymarket_predictions_tally.database.write import (
     insert_question,
     insert_response,
     insert_user,
-    load_sql_query,
 )
 from polymarket_predictions_tally.logic import InvalidResponse, Question, Response, User
 from polymarket_predictions_tally.utils import (
     assert_fails,
     assert_fails_with_exception,
+    load_sql_query,
     parse_datetime,
 )
 

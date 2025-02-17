@@ -59,3 +59,8 @@ def parse_datetime(dt_str: str) -> datetime:
         except ValueError:
             pass
     raise ValueError(f"Unrecognized datetime format: {dt_str}")
+
+
+def load_sql_query(file_path: str) -> str:
+    with open(file_path, "r") as f:
+        return f.read()

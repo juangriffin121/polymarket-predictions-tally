@@ -1,8 +1,8 @@
 import sqlite3
 
-from polymarket_predictions_tally.database import insert_user, load_sql_query
+from polymarket_predictions_tally.database.write import insert_user
 from polymarket_predictions_tally.logic import User
-from polymarket_predictions_tally.utils import assert_fails
+from polymarket_predictions_tally.utils import assert_fails, load_sql_query
 
 
 def test_insert_user():

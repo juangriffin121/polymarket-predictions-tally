@@ -1,11 +1,8 @@
 import sqlite3
 
-from polymarket_predictions_tally.database import (
-    insert_user,
-    load_sql_query,
-    remove_user,
-)
+from polymarket_predictions_tally.database.write import insert_user, remove_user
 from polymarket_predictions_tally.logic import User
+from polymarket_predictions_tally.utils import load_sql_query
 
 
 def test_remove_existing_user():

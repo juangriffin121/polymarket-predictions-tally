@@ -2,13 +2,14 @@ import sqlite3
 import json
 
 from datetime import datetime
-from polymarket_predictions_tally.database import (
-    insert_question,
-    is_question_in_db,
-    load_sql_query,
-)
+from polymarket_predictions_tally.database.read import is_question_in_db
+from polymarket_predictions_tally.database.write import insert_question
 from polymarket_predictions_tally.logic import Question
-from polymarket_predictions_tally.utils import assert_fails, parse_datetime
+from polymarket_predictions_tally.utils import (
+    assert_fails,
+    load_sql_query,
+    parse_datetime,
+)
 
 
 def test_insert_question():

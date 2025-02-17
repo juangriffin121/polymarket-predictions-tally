@@ -1,14 +1,12 @@
 import sqlite3
-
 import click
-
 from polymarket_predictions_tally.api import get_questions
 from polymarket_predictions_tally.cli.user_input import (
     process_prediction,
 )
-from polymarket_predictions_tally.database import (
+from polymarket_predictions_tally.database.read import get_previous_user_responses
+from polymarket_predictions_tally.database.write import (
     get_or_make_user,
-    get_previous_user_responses,
     insert_question,
     insert_response,
     update_present_questions,

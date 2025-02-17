@@ -3,13 +3,13 @@ import json
 from datetime import datetime
 from typing import assert_never
 
-from polymarket_predictions_tally.database import (
-    insert_question,
-    load_sql_query,
-    update_question,
-)
+from polymarket_predictions_tally.database.write import insert_question, update_question
 from polymarket_predictions_tally.logic import Question
-from polymarket_predictions_tally.utils import assert_fails, parse_datetime
+from polymarket_predictions_tally.utils import (
+    assert_fails,
+    load_sql_query,
+    parse_datetime,
+)
 
 
 def test_update_existing_question_success():

@@ -2,13 +2,9 @@ from datetime import datetime
 import json
 import sqlite3
 
-from polymarket_predictions_tally.database import (
-    insert_question,
-    load_sql_query,
-    remove_question,
-)
+from polymarket_predictions_tally.database.write import insert_question, remove_question
 from polymarket_predictions_tally.logic import Question
-from polymarket_predictions_tally.utils import assert_fails
+from polymarket_predictions_tally.utils import assert_fails, load_sql_query
 
 
 def test_remove_question():

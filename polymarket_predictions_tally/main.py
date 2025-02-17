@@ -2,8 +2,8 @@ import sqlite3
 from polymarket_predictions_tally.api import (
     get_questions,
 )
-from polymarket_predictions_tally.database import insert_question
 from cli.command import cli
+from polymarket_predictions_tally.database.write import insert_question
 
 
 def clear(conn: sqlite3.Connection):

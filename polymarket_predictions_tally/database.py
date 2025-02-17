@@ -39,9 +39,7 @@ def get_or_make_user(conn: sqlite3.Connection, username: str) -> User:
             raise Exception("Unreachable code")
 
 
-# MAKE TESTS FOR IT
 def insert_user_by_name(conn: sqlite3.Connection, username: str):
-    print("MAKE TESTS FOR INSERT_USER_BY_NAME AND REPLACE INSERT_USER!!!!")
     cursor = conn.cursor()
     query = load_sql_query("./database/insert_user_by_name.sql")
     cursor.execute(query, (username,))

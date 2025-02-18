@@ -141,10 +141,19 @@ def update_responses(
     cursor = conn.cursor()
     query = load_sql_query("./database/update_response.sql")
     for question, responses_to_question in zip(questions, responses):
+        if not question.outcome:
+            continue
+
         for response in responses_to_question:
             assert response.answer in ("Yes", "No")
-            assert question.outcome in ("Yes", "No")
-            correct = response.answer == question.outcome
+            assert not question.outcome is None
+
+            if question.outcome == True:
+                correct_answer = "Yes"
+            else:
+                correct_answer = "No"
+
+            correct = response.answer == correct_answer
             cursor.execute(
                 query, (correct, question.id, response.user_id, response.timestamp)
             )

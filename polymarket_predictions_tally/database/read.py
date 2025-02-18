@@ -118,7 +118,7 @@ def get_latest_responses_to_questions(
             responses_to_question_dict.setdefault(response.user_id, []).append(response)
         latest_responses_to_question = {
             user_id: newest_response(responses_to_question_by_user)
-            for user_id, responses_to_question_by_user in responses_to_question_dict
+            for user_id, responses_to_question_by_user in responses_to_question_dict.items()
         }
 
         responses.append(latest_responses_to_question)
@@ -137,11 +137,14 @@ def get_users_affected_by_update(
         for user_id, latest_response in responses_to_question.items():
             user = get_user_from_id(conn, user_id)
             user_answer = latest_response.answer
-            actual_answer = question.outcome
-            user_is_right = user_answer == actual_answer
+            assert not question.outcome is None
+            if question.outcome == True:
+                correct_answer = "Yes"
+            else:
+                correct_answer = "No"
+            user_is_right = user_answer == correct_answer
             info.append((user, latest_response, user_is_right))
             info_dict.setdefault(user, []).append((latest_response, user_is_right))
-            assert actual_answer in ("Yes", "No")
             assert user_answer in ("Yes", "No")
 
     return info_dict

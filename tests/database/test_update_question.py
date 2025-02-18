@@ -1,7 +1,6 @@
 import sqlite3
 import json
 from datetime import datetime
-from typing import assert_never
 
 from polymarket_predictions_tally.database.utils import load_sql_query
 from polymarket_predictions_tally.database.write import insert_question, update_question

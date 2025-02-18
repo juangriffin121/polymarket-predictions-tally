@@ -3,6 +3,7 @@ from polymarket_predictions_tally.api import (
     get_questions,
     get_questions_by_id_list,
 )
+from polymarket_predictions_tally.cli.command import cli
 from polymarket_predictions_tally.database.write import insert_question
 
 
@@ -32,4 +33,4 @@ def main():
 
 
 if __name__ == "__main__":
-    __import__("pprint").pprint(get_questions_by_id_list([514161, 514162]))
+    cli()

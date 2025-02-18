@@ -6,6 +6,8 @@ def inform_users_of_change(
     update_info: dict[User, list[tuple[Response, bool]]],
     updated_questions: list[Question],
 ):
+    if updated_questions == []:
+        click.echo("Everything up to date")
     updated_questions_dict = {question.id: question for question in updated_questions}
     for user, response_info in update_info.items():
         right_count = sum([correct for response, correct in response_info])

@@ -1,11 +1,11 @@
 import click
+from click.utils import echo
 
-from polymarket_predictions_tally.integration import run_user_session
+from polymarket_predictions_tally.integration import run_user_session, update_database
 
 
 @click.group()
 def cli():
-    click.echo("enters")
     pass
 
 
@@ -16,5 +16,7 @@ def predict(username):
     run_user_session(username)
 
 
-if __name__ == "__main__":
-    cli()
+@cli.command()  # of group cli
+def update():
+    echo("Updating database")
+    update_database()

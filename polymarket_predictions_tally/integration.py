@@ -20,6 +20,7 @@ from polymarket_predictions_tally.database.write import (
     update_present_questions,
     update_questions,
     update_responses,
+    update_user_stats,
 )
 
 
@@ -59,3 +60,8 @@ def update_database():
             resolved_questions,
         )
         inform_users_of_change(update_effects_info, resolved_questions)
+        update_user_stats()
+
+
+if __name__ == "__main__":
+    update_database()

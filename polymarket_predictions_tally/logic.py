@@ -43,7 +43,7 @@ class Event:
         return f"Event {self.id}: {self.title} (Ends: {date_str}) | {len(self.questions)} questions"
 
 
-@dataclass
+@dataclass(frozen=True)
 class User:
     id: int
     username: str
@@ -61,9 +61,10 @@ class Response:
 
     @classmethod
     def from_database_entry(
-        cls, entry: tuple[int, int, str, str, Optional[bool], Optional[str]]
+        cls, entry: tuple[int, int, int, str, str, Optional[bool], Optional[str]]
     ) -> "Response":
         (
+            response_id,
             user_id,
             question_id,
             answer,

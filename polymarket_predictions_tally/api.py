@@ -119,3 +119,15 @@ def fetch_data(
     response = requests.get(endpoint, params=params)
     response.raise_for_status()
     return response.json()
+
+
+def get_questions_by_id_list(id_list: list[int]) -> list[Question | None]:
+    endpoint = "https://gamma-api.polymarket.com/markets"
+    # Create a list of tuples for each id
+    params = [("id", str(id)) for id in id_list]
+    response = requests.get(endpoint, params=params)
+    response.raise_for_status()
+    # Assuming the API returns a dict with the key "markets"
+    return [
+        get_question_from_entry(entry, tag="Politics") for entry in response.json()
+    ]  # .json().get("markets", [])

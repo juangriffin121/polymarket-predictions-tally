@@ -6,6 +6,7 @@ from polymarket_predictions_tally.database.read import (
     is_question_in_db,
     validate_response,
 )
+from polymarket_predictions_tally.database.utils import load_sql_query
 from polymarket_predictions_tally.logic import (
     Event,
     InvalidResponse,
@@ -13,7 +14,6 @@ from polymarket_predictions_tally.logic import (
     User,
     Response,
 )
-from polymarket_predictions_tally.utils import load_sql_query
 
 
 def get_or_make_user(conn: sqlite3.Connection, username: str) -> User:
@@ -57,14 +57,6 @@ def insert_user(conn: sqlite3.Connection, user: User):
     conn.commit()
 
 
-def remove_event(conn: sqlite3.Connection, id: int):
-    raise NotImplementedError
-
-
-def insert_event(conn: sqlite3.Connection, event: Event):
-    raise NotImplementedError
-
-
 def insert_response(conn: sqlite3.Connection, response: Response):
     params = (
         response.user_id,
@@ -97,6 +89,12 @@ def insert_response(conn: sqlite3.Connection, response: Response):
 def update_question(conn: sqlite3.Connection, question: Question):
     remove_question(conn, question.id)
     insert_question(conn, question)
+
+
+def update_questions(conn: sqlite3.Connection, questions: list[Question | None]):
+    for question in questions:
+        if question:
+            update_question(conn, question)
 
 
 def update_present_questions(conn: sqlite3.Connection, api_questions: list[Question]):
@@ -135,3 +133,22 @@ def insert_question(conn: sqlite3.Connection, question: Question):
 
     # Commit the transaction
     conn.commit()
+
+
+def update_responses(
+    conn: sqlite3.Connection, responses: list[list[Response]], questions: list[Question]
+):
+    cursor = conn.cursor()
+    query = load_sql_query("./database/update_response.sql")
+    for question, responses_to_question in zip(questions, responses):
+        for response in responses_to_question:
+            assert response.answer in ("Yes", "No")
+            assert question.outcome in ("Yes", "No")
+            correct = response.answer == question.outcome
+            cursor.execute(
+                query, (correct, question.id, response.user_id, response.timestamp)
+            )
+
+
+def update_user_stats():
+    pass

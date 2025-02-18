@@ -3,11 +3,11 @@ import json
 from datetime import datetime
 from typing import assert_never
 
+from polymarket_predictions_tally.database.utils import load_sql_query
 from polymarket_predictions_tally.database.write import insert_question, update_question
 from polymarket_predictions_tally.logic import Question
 from polymarket_predictions_tally.utils import (
     assert_fails,
-    load_sql_query,
     parse_datetime,
 )
 

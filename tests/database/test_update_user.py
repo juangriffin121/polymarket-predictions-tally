@@ -1,8 +1,9 @@
 import sqlite3
 
+from polymarket_predictions_tally.database.utils import load_sql_query
 from polymarket_predictions_tally.database.write import insert_user, update_user
 from polymarket_predictions_tally.logic import User
-from polymarket_predictions_tally.utils import assert_fails, load_sql_query
+from polymarket_predictions_tally.utils import assert_fails
 
 
 def test_update_existing_user():

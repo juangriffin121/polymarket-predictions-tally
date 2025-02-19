@@ -2,13 +2,11 @@ from datetime import datetime
 import sqlite3
 
 
-from polymarket_predictions_tally.database.read import get_user_id_by_name
 from polymarket_predictions_tally.database.utils import load_sql_query
 from polymarket_predictions_tally.database.write import (
     insert_question,
     insert_response,
     insert_user,
-    insert_user_by_name,
     update_users_stats,
 )
 from polymarket_predictions_tally.logic import Question, Response, User

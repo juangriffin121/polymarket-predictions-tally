@@ -1,15 +1,16 @@
 from typing import List
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import requests
 import json
 from polymarket_predictions_tally.logic import Event, Question
+from polymarket_predictions_tally.constants import MAX_TIME_DELTA_DAYS, MAX_QUESTIONS
 
 
 tag_names = {1: "Sports", 2: "Politics", 3: "Other"}
 tag_ids = {"Sports": 1, "Politics": 2, "Other": 3}
 
 
-def get_questions(tag: str, limit: int = 100) -> List[Question]:
+def get_questions(tag: str, limit: int = MAX_QUESTIONS) -> List[Question]:
     endpoint = "https://gamma-api.polymarket.com/markets"
     data = fetch_data(tag, endpoint, limit)
     return get_questions_from_data(tag, data)
@@ -101,7 +102,7 @@ def get_event_from_entry(entry: dict, tag: str) -> Event:
 def fetch_data(
     tag: str,
     endpoint: str,
-    limit: int = 100,
+    limit: int,
 ) -> List[dict]:
     try:
         tag_id = tag_ids[tag]
@@ -114,6 +115,10 @@ def fetch_data(
         "tag_id": tag_id,
         "ascending": "false",
         "order": "volume",
+        "end_date_min": (datetime.now(tz=timezone.utc) + timedelta(days=1)).isoformat(),
+        "end_date_max": (
+            datetime.now(tz=timezone.utc) + timedelta(days=MAX_TIME_DELTA_DAYS)
+        ).isoformat(),
     }
 
     response = requests.get(endpoint, params=params)

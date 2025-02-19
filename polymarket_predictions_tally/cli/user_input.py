@@ -24,7 +24,9 @@ def prompt_question_selection(
     options = []
     for i, (question, response) in enumerate(zip(questions, responses), 1):
         status = f"[{response.answer}]" if response else ""
-        options.append(f"{i}. {question.question} {status}".strip())
+        options.append(
+            f"{i}. {question.question} [{question.end_date.date()}] {status}".strip()
+        )
 
     # Prompt the user to select a question
     click.echo("\nAvailable Questions:\n" + "\n".join(options))
@@ -49,7 +51,7 @@ def prompt_for_response(
     If the user chooses not to change their answer, return None.
     Otherwise, prompt the user to provide a new answer (e.g. "yes" or "no") and return it.
     """
-    click.echo(f"{question.question}")
+    click.echo(f"{question.question} {question.end_date}")
     if previous_response is not None:
         click.echo(f"You answered [{previous_response.answer}] before")
         click.echo(f"Your explanation for it was:\n\t{previous_response.explanation}")

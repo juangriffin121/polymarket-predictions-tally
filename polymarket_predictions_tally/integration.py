@@ -1,16 +1,15 @@
 import sqlite3
-from polymarket_predictions_tally import api, utils
+from polymarket_predictions_tally import api
 from polymarket_predictions_tally.cli.prints import inform_users_of_change
 from polymarket_predictions_tally.cli.user_input import (
     process_prediction,
 )
+from polymarket_predictions_tally.constants import MAX_QUESTIONS
 from polymarket_predictions_tally.database.read import (
     get_active_question_ids,
     get_all_responses_to_questions,
     get_latest_responses_to_questions,
     get_previous_user_responses,
-    get_user,
-    get_user_from_id,
     get_users_affected_by_update,
 )
 from polymarket_predictions_tally.database.write import (
@@ -20,7 +19,6 @@ from polymarket_predictions_tally.database.write import (
     update_present_questions,
     update_questions,
     update_responses,
-    update_user_stats,
     update_users_stats,
 )
 
@@ -28,7 +26,7 @@ from polymarket_predictions_tally.database.write import (
 def run_user_session(username: str, mode: str = "predict"):
     with sqlite3.connect("./database/database.db") as conn:
         user = get_or_make_user(conn, username)
-        api_questions = api.get_questions(tag="Politics", limit=10)
+        api_questions = api.get_questions(tag="Politics", limit=MAX_QUESTIONS)
         update_present_questions(conn, api_questions)
         previous_user_responses = get_previous_user_responses(
             conn, api_questions, user.id
@@ -62,7 +60,3 @@ def update_database():
         )
         inform_users_of_change(update_effects_info, resolved_questions)
         update_users_stats(conn, update_effects_info)
-
-
-if __name__ == "__main__":
-    update_database()

@@ -158,3 +158,53 @@ def get_user_id_by_name(conn: sqlite3.Connection, username: str) -> int | None:
     assert len(results) <= 1
     if len(results) == 1:
         return results[0][0]
+
+
+def get_all_responses(conn: sqlite3.Connection, user_id: int) -> list[Response]:
+    cursor = conn.cursor()
+    query = load_sql_query("./database/get_all_responses.sql")
+    cursor.execute(query, (user_id,))
+    results = cursor.fetchall()
+    return [Response.from_database_entry(result) for result in results]
+
+
+def get_latest_responses(conn: sqlite3.Connection, user_id: int) -> list[Response]:
+    all_responses = get_all_responses(conn, user_id)
+    responses_dict = {}
+    for response in all_responses:
+        responses_dict.setdefault(response.question_id, []).append(response)
+    return [
+        newest_response(responses) for question_id, responses in responses_dict.items()
+    ]
+
+
+def get_responses(
+    conn: sqlite3.Connection, user_id: int, all: bool = False
+) -> list[Response]:
+    if all:
+        return get_all_responses(conn, user_id)
+    else:
+        return get_latest_responses(conn, user_id)
+
+
+def get_question_from_id(conn: sqlite3.Connection, question_id: int) -> Question:
+    cursor = conn.cursor()
+    query = load_sql_query("./database/get_question_from_id.sql")
+    cursor.execute(query, (question_id,))
+    results = cursor.fetchone()
+    return Question(*results)
+
+
+def get_questions_from_ids(conn: sqlite3.Connection, ids: list[int]) -> list[Question]:
+    questions = []
+    for question_id in ids:
+        questions.append(get_question_from_id(conn, question_id))
+
+    return questions
+
+
+def get_stats(conn: sqlite3.Connection, user_id: int) -> tuple[int, int]:
+    cursor = conn.cursor()
+    query = load_sql_query("./database/get_stats.sql")
+    cursor.execute(query, (user_id,))
+    return cursor.fetchone()

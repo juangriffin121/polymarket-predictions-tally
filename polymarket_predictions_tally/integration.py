@@ -1,5 +1,6 @@
 import sqlite3
 from polymarket_predictions_tally import api
+from polymarket_predictions_tally.cli import prints
 from polymarket_predictions_tally.cli.prints import inform_users_of_change
 from polymarket_predictions_tally.cli.user_input import (
     process_prediction,
@@ -8,8 +9,14 @@ from polymarket_predictions_tally.constants import MAX_QUESTIONS
 from polymarket_predictions_tally.database.read import (
     get_active_question_ids,
     get_all_responses_to_questions,
+    get_latest_responses,
     get_latest_responses_to_questions,
     get_previous_user_responses,
+    get_questions_from_ids,
+    get_responses,
+    get_stats,
+    get_user,
+    get_user_id_by_name,
     get_users_affected_by_update,
 )
 from polymarket_predictions_tally.database.write import (
@@ -60,3 +67,19 @@ def update_database():
         )
         inform_users_of_change(update_effects_info, resolved_questions)
         update_users_stats(conn, update_effects_info)
+
+
+def history(username):
+    with sqlite3.connect("./database/database.db") as conn:
+        user = get_user(conn, username)
+        if user is None:
+            prints.user_not_in_db(username)
+            return
+
+        responses = get_responses(conn, user.id)
+        questions = get_questions_from_ids(
+            conn, [response.question_id for response in responses]
+        )
+        stats = get_stats(conn, user.id)
+
+        prints.history(user, responses, questions, stats)

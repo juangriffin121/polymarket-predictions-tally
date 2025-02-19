@@ -8,7 +8,7 @@ from polymarket_predictions_tally.database.write import (
     insert_response,
     insert_user_by_name,
 )
-from polymarket_predictions_tally.logic import Question, Response, User
+from polymarket_predictions_tally.logic import Question, Response
 
 
 # --- Helper to create the test database schema ---

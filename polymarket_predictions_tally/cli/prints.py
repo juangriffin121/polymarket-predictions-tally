@@ -1,3 +1,4 @@
+from click.utils import echo
 from polymarket_predictions_tally.logic import Question, Response, User
 import click
 
@@ -31,3 +32,35 @@ def inform_users_of_change(
 
 def inform_stats_update():
     pass
+
+
+def user_not_in_db(username: str):
+    click.echo(f" User {username} not in database, please try again")
+
+
+def history(
+    user: User,
+    responses: list[Response],
+    questions: list[Question],
+    stats: tuple[int, int],
+):
+    red = "\033[91m"
+    green = "\033[92m"
+    reset = "\033[0m"
+
+    click.echo(f"User [{user.username}]")
+    click.echo("Responses:")
+    for question, response in zip(questions, responses):
+        match response.correct:
+            case True:
+                color = red
+            case False:
+                color = green
+            case None:
+                color = reset
+
+        click.echo(f"\t{question.question} {color}[{response.answer}]{reset}")
+
+    click.echo("")
+    click.echo(f"User: [{user.username}]")
+    click.echo(f"Stats: {green}{stats[0]}{reset}{red}{stats[1]}{reset}")

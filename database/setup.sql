@@ -31,6 +31,13 @@ CREATE TABLE IF NOT EXISTS responses (
     FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
+CREATE TABLE IF NOT EXISTS stats (
+    user_id INTEGER NOT NULL,
+    correct_answers INTEGER NOT NULL,
+    incorrect_answers INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 ---------------------------------------------------
 
 -- Money Database Tables

@@ -148,3 +148,13 @@ def get_users_affected_by_update(
             assert user_answer in ("Yes", "No")
 
     return info_dict
+
+
+def get_user_id_by_name(conn: sqlite3.Connection, username: str) -> int | None:
+    cursor = conn.cursor()
+    query = load_sql_query("./database/get_user_id_by_username.sql")
+    cursor.execute(query, (username,))
+    results = cursor.fetchall()
+    assert len(results) <= 1
+    if len(results) == 1:
+        return results[0][0]

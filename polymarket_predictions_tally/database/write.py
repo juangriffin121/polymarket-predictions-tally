@@ -3,6 +3,7 @@ import sqlite3
 
 from polymarket_predictions_tally.database.read import (
     get_user,
+    get_user_id_by_name,
     is_question_in_db,
     validate_response,
 )
@@ -33,6 +34,10 @@ def insert_user_by_name(conn: sqlite3.Connection, username: str):
     cursor = conn.cursor()
     query = load_sql_query("./database/insert_user_by_name.sql")
     cursor.execute(query, (username,))
+    user_id = get_user_id_by_name(conn, username)
+    conn.commit()
+    assert not user_id is None
+    insert_default_stats(conn, user_id=user_id)
     conn.commit()
 
 
@@ -54,6 +59,7 @@ def insert_user(conn: sqlite3.Connection, user: User):
     cursor = conn.cursor()
     insert_user_query = load_sql_query("./database/insert_user.sql")
     cursor.execute(insert_user_query, (user.id, user.username, user.budget))
+    insert_default_stats(conn, user_id=user.id)
     conn.commit()
 
 
@@ -159,5 +165,27 @@ def update_responses(
             )
 
 
-def update_user_stats():
-    pass
+def insert_default_stats(conn: sqlite3.Connection, user_id: int):
+    query = load_sql_query("./database/insert_default_stats.sql")
+    cursor = conn.cursor()
+    cursor.execute(query, (user_id,))
+
+
+def update_user_stats(
+    conn: sqlite3.Connection,
+    user_id: int,
+    new_correct_responses: int,
+    new_incorrect_responses: int,
+):
+    query = load_sql_query("./database/update_user_stats.sql")
+    cursor = conn.cursor()
+    cursor.execute(query, (new_correct_responses, new_incorrect_responses, user_id))
+
+
+def update_users_stats(
+    conn: sqlite3.Connection, update_info: dict[User, list[tuple[Response, bool]]]
+):
+    for user, info in update_info.items():
+        right_count = sum([correct for _, correct in info])
+        wrong_count = len(info) - right_count
+        update_user_stats(conn, user.id, right_count, wrong_count)

@@ -21,3 +21,6 @@ pytest = "^8.3.4"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+polytally = "polymarket_predictions_tally.cli.command:cli"

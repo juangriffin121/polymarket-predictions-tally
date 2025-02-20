@@ -4,7 +4,7 @@
 **Polymarket Prediction Tally** is a command-line tool designed to track, store, and analyze predictions on Polymarket. It fetches active markets, allows users to log their predictions, and calculates performance based on resolved markets.
 
 ## Features
-- Fetch active prediction markets from Polymarket (via the [Gamma Markets API][https://docs.polymarket.com/#gamma-markets-api]).
+- Fetch active prediction markets from Polymarket (via the [Gamma Markets API](https://docs.polymarket.com/#gamma-markets-api)).
 - Allow users to make predictions and store them in a database.
 - Periodically check for market resolutions and update prediction statistics.
 - Provide statistical insights into user prediction accuracy.
@@ -29,9 +29,9 @@
     poetry build
     ```
 4. Install the built package:
-```bash
-pip install dist/polymarket_predictions_tally-0.1.0-py3-none-any.whl
-```
+    ```bash
+    pip install dist/polymarket_predictions_tally-0.1.0-py3-none-any.whl
+    ```
 
 ## Usage
 After installation, you can use the `polytally` command from anywhere in your terminal. Below are the available commands and their purposes:

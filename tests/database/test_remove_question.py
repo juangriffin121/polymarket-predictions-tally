@@ -10,7 +10,7 @@ from polymarket_predictions_tally.utils import assert_fails
 
 def test_remove_question():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Create a test question
@@ -37,7 +37,7 @@ def test_remove_question():
 
 def test_remove_non_existent_question():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Create a test question

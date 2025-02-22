@@ -4,6 +4,10 @@ version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
+include = [
+  { path = "queries/*.sql", format = "sdist" },
+  { path = "config/*.toml", format = "sdist" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -23,4 +27,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-polytally = "polymarket_predictions_tally.cli.command:cli"
+polytally = "polymarket_predictions_tally.main:main"

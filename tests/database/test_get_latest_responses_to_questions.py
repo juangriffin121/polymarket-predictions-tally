@@ -14,7 +14,7 @@ from polymarket_predictions_tally.logic import Question, Response
 def test_get_latest_responses_to_questions():
     with sqlite3.connect(":memory:") as conn:
         # Initialize the database
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Create test questions

@@ -15,7 +15,7 @@ def test_update_existing_question_success():
     """Test that updating an existing question correctly changes all fields."""
     with sqlite3.connect(":memory:") as conn:
         # Set up the schema
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Insert an initial question
@@ -66,7 +66,7 @@ def test_update_existing_question_success():
 
 def test_update_nonexistent_question():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         non_existent_question = Question(
@@ -84,7 +84,7 @@ def test_update_nonexistent_question():
 
 def test_multiple_updates():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Insert two questions

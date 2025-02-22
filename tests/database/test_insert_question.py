@@ -16,7 +16,7 @@ def test_insert_question():
     with sqlite3.connect(":memory:") as conn:
 
         # Create the questions table (schema must match your actual database)
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Create a test question
@@ -59,7 +59,7 @@ def test_insert_question_optional_fields():
     Test inserting a question with empty JSON fields to verify defaults.
     """
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Create a test question with empty outcome_probs and outcomes
@@ -90,7 +90,7 @@ def test_multiple_inserts():
     Test inserting multiple questions to ensure each is handled independently.
     """
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         q1 = Question(
@@ -127,7 +127,7 @@ def test_multiple_inserts():
 def test_duplicate_id_insertion_fails():
     with sqlite3.connect(":memory:") as conn:
         # Set up the database schema
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Insert the first question with id=1
@@ -161,7 +161,7 @@ def test_duplicate_id_insertion_fails():
 
 def test_is_question_in_db():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         test_question = Question(

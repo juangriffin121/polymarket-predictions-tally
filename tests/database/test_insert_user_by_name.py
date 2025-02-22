@@ -8,7 +8,7 @@ from polymarket_predictions_tally.utils import assert_fails
 
 def test_insert_user_by_name():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         insert_user_by_name(
             conn,
@@ -27,7 +27,7 @@ def test_insert_user_by_name():
 def test_insert_user_by_name_duplicate_id():
     """Test that inserting a user with a duplicate id raises an error."""
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         insert_user_by_name(
@@ -45,7 +45,7 @@ def test_insert_user_by_name_duplicate_id():
 def test_insert_multiple_users():
     """Test that multiple users can be inserted and coexist in the database."""
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         insert_user_by_name(

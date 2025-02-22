@@ -10,7 +10,7 @@ def test_update_existing_user():
     """Test that updating an existing user's budget works as expected."""
     with sqlite3.connect(":memory:") as conn:
         # Set up the schema
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Insert a test user
@@ -35,7 +35,7 @@ def test_update_nonexistent_user():
     """
     with sqlite3.connect(":memory:") as conn:
         # Set up the schema
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Attempt to update a user that doesn't exist
@@ -48,7 +48,7 @@ def test_update_user_among_multiple_users():
     """Test that updating one user does not affect the budgets of others."""
     with sqlite3.connect(":memory:") as conn:
         # Set up the schema
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Insert multiple users

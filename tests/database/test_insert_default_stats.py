@@ -11,7 +11,7 @@ from polymarket_predictions_tally.logic import User
 
 def test_insert_default_stats():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         # Call the function directly.
         insert_default_stats(conn, user_id=1)
@@ -24,7 +24,7 @@ def test_insert_default_stats():
 
 def test_insert_user_inserts_default_stats():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         # Create a user.
         user = User(id=1, username="Alice", budget=100)
@@ -42,7 +42,7 @@ def test_insert_user_inserts_default_stats():
 
 def test_insert_user_by_name_inserts_default_stats():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         username = "Bob"
         insert_user_by_name(conn, username)

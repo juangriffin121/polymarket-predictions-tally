@@ -15,7 +15,7 @@ from polymarket_predictions_tally.logic import Question, Response, User
 def test_update_users_stats():
     with sqlite3.connect(":memory:") as conn:
         # Setup DB
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Create test data

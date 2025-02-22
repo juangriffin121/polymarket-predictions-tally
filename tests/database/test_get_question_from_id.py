@@ -9,7 +9,7 @@ from polymarket_predictions_tally.logic import Question
 
 def test_get_question_from_id_exists():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         q = Question(
             id=1,
@@ -30,7 +30,7 @@ def test_get_question_from_id_exists():
 
 def test_get_question_from_id_not_found():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         # With no question inserted, calling get_question_from_id should result in a TypeError
         # because fetchone() will return None and then results[0] will fail.

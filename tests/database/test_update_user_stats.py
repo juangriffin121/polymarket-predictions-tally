@@ -9,7 +9,7 @@ from polymarket_predictions_tally.database.write import (
 
 def test_update_user_stats_initial_update():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         # Create a user with default stats.
         insert_user_by_name(conn, username="Alice")
@@ -42,7 +42,7 @@ def test_update_user_stats_initial_update():
 
 def test_update_user_stats_multiple_updates():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         insert_user_by_name(conn, username="Alice")
 

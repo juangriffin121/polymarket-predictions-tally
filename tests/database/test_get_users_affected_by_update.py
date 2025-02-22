@@ -13,7 +13,7 @@ from polymarket_predictions_tally.logic import Question, Response, User
 
 def test_get_users_affected_by_update_single_question():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         # Insert users (assume insert_user is available; if not, manually insert rows)
         alice = User(id=1, username="Alice", budget=100)
@@ -101,7 +101,7 @@ def test_get_users_affected_by_update_single_question():
 
 def test_get_users_affected_by_update_multiple_questions():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Insert two users: Alice and Bob.

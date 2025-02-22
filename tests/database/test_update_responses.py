@@ -14,7 +14,7 @@ from polymarket_predictions_tally.logic import Question, Response
 
 def test_update_responses_updates_correct_flag():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         # Create a question that has an outcome.
         # For example, outcome=True corresponds to "Yes".
@@ -77,7 +77,7 @@ def test_update_responses_updates_correct_flag():
 
 def test_update_responses_does_nothing_when_outcome_none():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Create a question with outcome set to None.

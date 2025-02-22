@@ -9,7 +9,7 @@ def test_remove_existing_user():
     """Test that a user is removed if they exist."""
     with sqlite3.connect(":memory:") as conn:
         # Set up the schema
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Insert a test user
@@ -30,7 +30,7 @@ def test_remove_nonexistent_user():
     """Test that removing a non-existent user does not cause an error."""
     with sqlite3.connect(":memory:") as conn:
         # Set up the schema
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Attempt to remove a user that doesn't exist (id=999)
@@ -48,7 +48,7 @@ def test_remove_nonexistent_user():
 def test_remove_user_among_multiple_users():
     """Test that removing one user does not affect the others."""
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # Insert multiple users

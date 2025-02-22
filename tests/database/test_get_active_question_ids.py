@@ -8,7 +8,7 @@ from polymarket_predictions_tally.logic import Question
 
 def test_get_active_question_ids_empty():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         # No rows inserted; should return an empty list.
@@ -18,7 +18,7 @@ def test_get_active_question_ids_empty():
 
 def test_get_active_question_ids_non_null_outcomes():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
 
         q1 = Question(
@@ -49,7 +49,7 @@ def test_get_active_question_ids_non_null_outcomes():
 
 def test_get_active_question_ids_mixed():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         # Insert a mix of questions: outcome = NULL means active.
         q1 = Question(

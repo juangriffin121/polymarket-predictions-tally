@@ -13,7 +13,7 @@ from polymarket_predictions_tally.database.write import (
 
 def test_get_all_responses_empty():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         # No responses inserted for user 1
         responses = get_all_responses(conn, 1)
@@ -22,7 +22,7 @@ def test_get_all_responses_empty():
 
 def test_get_all_responses_returns_responses():
     with sqlite3.connect(":memory:") as conn:
-        start_db = load_sql_query("./database/setup.sql")
+        start_db = load_sql_query("setup.sql")
         conn.executescript(start_db)
         # Insert two responses for user 1
         insert_user_by_name(conn, "u1")

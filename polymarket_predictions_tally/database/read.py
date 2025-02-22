@@ -5,7 +5,7 @@ from polymarket_predictions_tally.logic import Question, Response, User
 
 def get_user(conn: sqlite3.Connection, username: str) -> User | None:
     cursor = conn.cursor()
-    query = load_sql_query("./database/get_user.sql")
+    query = load_sql_query("get_user.sql")
     cursor.execute(query, (username,))
     results = cursor.fetchone()
     if results is not None:
@@ -14,7 +14,7 @@ def get_user(conn: sqlite3.Connection, username: str) -> User | None:
 
 def get_user_from_id(conn: sqlite3.Connection, user_id: int) -> User | None:
     cursor = conn.cursor()
-    query = load_sql_query("./database/get_user_from_id.sql")
+    query = load_sql_query("get_user_from_id.sql")
     cursor.execute(query, (user_id,))
     results = cursor.fetchone()
     if results is not None:
@@ -25,7 +25,7 @@ def has_user_answered(
     conn: sqlite3.Connection, user_id: int, question_id: int
 ) -> Response | None:
     cursor = conn.cursor()
-    query = load_sql_query("./database/has_user_answered.sql")
+    query = load_sql_query("has_user_answered.sql")
     cursor.execute(query, (user_id, question_id))
     results = cursor.fetchone()
     if results is not None:
@@ -45,7 +45,7 @@ def get_previous_user_responses(
 
 
 def is_question_in_db(conn: sqlite3.Connection, question_id) -> bool:
-    query = load_sql_query("./database/is_question_in_db.sql")
+    query = load_sql_query("is_question_in_db.sql")
     cursor = conn.cursor()
     cursor.execute(query, (question_id,))
     results = cursor.fetchone()
@@ -61,7 +61,7 @@ def validate_response(
 
 
 def get_user_ids(conn: sqlite3.Connection) -> list[int]:
-    users_query = load_sql_query("./database/list_users_id.sql")
+    users_query = load_sql_query("list_users_id.sql")
     cursor = conn.cursor()
     cursor.execute(users_query)
     results = cursor.fetchall()
@@ -69,7 +69,7 @@ def get_user_ids(conn: sqlite3.Connection) -> list[int]:
 
 
 def get_question_ids(conn: sqlite3.Connection) -> list[int]:
-    questions_query = load_sql_query("./database/list_questions_id.sql")
+    questions_query = load_sql_query("list_questions_id.sql")
     cursor = conn.cursor()
     cursor.execute(questions_query)
     results = cursor.fetchall()
@@ -77,7 +77,7 @@ def get_question_ids(conn: sqlite3.Connection) -> list[int]:
 
 
 def get_active_question_ids(conn: sqlite3.Connection) -> list[int]:
-    questions_query = load_sql_query("./database/list_active_questions.sql")
+    questions_query = load_sql_query("list_active_questions.sql")
     cursor = conn.cursor()
     cursor.execute(questions_query)
     results = cursor.fetchall()
@@ -90,7 +90,7 @@ def get_all_responses_to_questions(
     cursor = conn.cursor()
     responses = []
     for question in questions:
-        query = load_sql_query("./database/get_responses_to_question.sql")
+        query = load_sql_query("get_responses_to_question.sql")
         cursor.execute(query, (question.id,))
         results = cursor.fetchall()
         responses_to_question = [
@@ -107,7 +107,7 @@ def get_latest_responses_to_questions(
     cursor = conn.cursor()
     responses = []
     for question in questions:
-        query = load_sql_query("./database/get_responses_to_question.sql")
+        query = load_sql_query("get_responses_to_question.sql")
         cursor.execute(query, (question.id,))
         results = cursor.fetchall()
         responses_to_question = [
@@ -152,7 +152,7 @@ def get_users_affected_by_update(
 
 def get_user_id_by_name(conn: sqlite3.Connection, username: str) -> int | None:
     cursor = conn.cursor()
-    query = load_sql_query("./database/get_user_id_by_username.sql")
+    query = load_sql_query("get_user_id_by_username.sql")
     cursor.execute(query, (username,))
     results = cursor.fetchall()
     assert len(results) <= 1
@@ -162,7 +162,7 @@ def get_user_id_by_name(conn: sqlite3.Connection, username: str) -> int | None:
 
 def get_all_responses(conn: sqlite3.Connection, user_id: int) -> list[Response]:
     cursor = conn.cursor()
-    query = load_sql_query("./database/get_all_responses.sql")
+    query = load_sql_query("get_all_responses.sql")
     cursor.execute(query, (user_id,))
     results = cursor.fetchall()
     return [Response.from_database_entry(result) for result in results]
@@ -189,7 +189,7 @@ def get_responses(
 
 def get_question_from_id(conn: sqlite3.Connection, question_id: int) -> Question:
     cursor = conn.cursor()
-    query = load_sql_query("./database/get_question_from_id.sql")
+    query = load_sql_query("get_question_from_id.sql")
     cursor.execute(query, (question_id,))
     results = cursor.fetchone()
     return Question(*results)
@@ -205,6 +205,6 @@ def get_questions_from_ids(conn: sqlite3.Connection, ids: list[int]) -> list[Que
 
 def get_stats(conn: sqlite3.Connection, user_id: int) -> tuple[int, int]:
     cursor = conn.cursor()
-    query = load_sql_query("./database/get_stats.sql")
+    query = load_sql_query("get_stats.sql")
     cursor.execute(query, (user_id,))
     return cursor.fetchone()

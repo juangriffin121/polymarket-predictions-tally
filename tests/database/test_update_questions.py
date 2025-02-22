@@ -10,7 +10,7 @@ from polymarket_predictions_tally.logic import Question
 
 # Helper function to create the test database schema
 def create_questions_table(conn: sqlite3.Connection):
-    start_db = load_sql_query("./database/setup.sql")
+    start_db = load_sql_query("setup.sql")
     conn.executescript(start_db)
 
 

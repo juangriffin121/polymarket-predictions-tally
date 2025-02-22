@@ -16,7 +16,7 @@ from polymarket_predictions_tally.utils import (
 
 
 def setup_db(conn: sqlite3.Connection):
-    start_db = load_sql_query("./database/setup.sql")
+    start_db = load_sql_query("setup.sql")
     conn.executescript(start_db)
 
     question = Question(

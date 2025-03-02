@@ -1,7 +1,9 @@
-from platformdirs import user_data_dir
+from platformdirs import user_config_dir, user_data_dir
 import pathlib
 import sqlite3
 from polymarket_predictions_tally.database.utils import load_sql_query
+import toml
+from importlib.resources import open_text
 
 APP_NAME = "polymarket-predictions-tally"
 data_dir = pathlib.Path(user_data_dir(APP_NAME))
@@ -25,3 +27,19 @@ def initialize_db_if_needed():
             conn.commit()
         finally:
             conn.close()
+
+
+def initialize_config_if_needed():
+    config_dir = pathlib.Path(user_config_dir(APP_NAME))
+    config_file = config_dir / "config.toml"
+
+    if not config_file.exists():
+        config_dir.mkdir(parents=True, exist_ok=True)
+        with open_text(
+            "polymarket_predictions_tally.config", "config.toml", encoding="utf-8"
+        ) as f:
+            default_config = f.read()
+        config_file.write_text(default_config, encoding="utf-8")
+
+    config = toml.loads(config_file.read_text(encoding="utf-8"))
+    return config

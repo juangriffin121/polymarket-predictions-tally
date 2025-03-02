@@ -82,7 +82,7 @@ def get_question_from_entry(entry: dict, tag: str) -> Question | None:
         outcome_probs=[float(p) for p in json.loads(entry["outcomePrices"])],
         outcomes=json.loads(entry["outcomes"]),
         tag=tag,
-        outcome=None,
+        outcome=get_resolved_outcome(entry),
         end_date=end_date,
         description=entry["description"],
     )
@@ -136,3 +136,33 @@ def get_questions_by_id_list(id_list: list[int]) -> list[Question | None]:
     return [
         get_question_from_entry(entry, tag="Politics") for entry in response.json()
     ]  # .json().get("markets", [])
+
+
+def get_resolved_outcome(entry: dict) -> bool | None:
+    """
+    Returns:
+        - True: Market resolved to "Yes"
+        - False: Market resolved to "No"
+        - None: Market not resolved or data format error
+    """
+    # Check if market is resolved
+    if entry.get("umaResolutionStatus") != "resolved":
+        return None
+
+    try:
+        # Parse outcome prices and labels
+        outcome_prices = json.loads(entry["outcomePrices"])
+        outcomes = json.loads(entry["outcomes"])
+
+        # Find the winning outcome index (price == "1")
+        winning_idx = next(
+            (i for i, price in enumerate(outcome_prices) if price == "1"), None
+        )
+
+        if winning_idx is None or winning_idx >= len(outcomes):
+            return None  # No valid winning outcome
+
+        return outcomes[winning_idx] == "Yes"
+
+    except (KeyError, json.JSONDecodeError):
+        return None  # Handle missing fields or invalid JSON

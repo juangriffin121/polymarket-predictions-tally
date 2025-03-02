@@ -51,11 +51,20 @@ def history(
     click.echo(f"User [{user.username}]")
     click.echo("Responses:")
     for question, response in zip(questions, responses):
-        match response.correct:
+        print(question.outcome)
+        match question.outcome:
+            case None:
+                correct = None
+            case True | 1:
+                correct = response.answer == "Yes"
+            case False | 0:
+                correct = response.answer == "No"
+
+        match correct:
             case True:
-                color = red
-            case False:
                 color = green
+            case False:
+                color = red
             case None:
                 color = reset
 

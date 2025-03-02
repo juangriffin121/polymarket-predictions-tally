@@ -146,6 +146,7 @@ def update_responses(
 ):
     cursor = conn.cursor()
     query = load_sql_query("update_response.sql")
+
     for question, responses_to_question in zip(questions, responses):
         if not question.outcome:
             continue

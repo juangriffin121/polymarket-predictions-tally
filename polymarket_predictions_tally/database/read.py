@@ -1,4 +1,5 @@
 import sqlite3
+from typing import List
 from polymarket_predictions_tally.database.utils import load_sql_query, newest_response
 from polymarket_predictions_tally.logic import Question, Response, User
 
@@ -10,6 +11,14 @@ def get_user(conn: sqlite3.Connection, username: str) -> User | None:
     results = cursor.fetchone()
     if results is not None:
         return User(*results)
+
+
+def get_all_users(conn: sqlite3.Connection) -> list[User]:
+    cursor = conn.cursor()
+    query = "SELECT * FROM users"
+    cursor.execute(query)
+    results = cursor.fetchall()
+    return [User(*result) for result in results]
 
 
 def get_user_from_id(conn: sqlite3.Connection, user_id: int) -> User | None:

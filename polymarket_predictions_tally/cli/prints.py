@@ -72,3 +72,8 @@ def history(
     click.echo("")
     click.echo(f"User: [{user.username}]")
     click.echo(f"Stats: {green}{stats[0]}[+]{reset} {red}{stats[1]}[-]{reset}")
+
+
+def users(users_list: list[User]):
+    for user in users_list:
+        click.echo(f"{user.username}")

@@ -2,7 +2,11 @@ import click
 from click.utils import echo
 
 from polymarket_predictions_tally import integration
-from polymarket_predictions_tally.integration import run_user_session, update_database
+from polymarket_predictions_tally.integration import (
+    run_user_session,
+    show_users,
+    update_database,
+)
 
 
 @click.group()
@@ -26,3 +30,8 @@ def update():
 @click.argument("username")
 def history(username):
     integration.history(username)
+
+
+@cli.command()  # of group cli
+def users():
+    show_users()

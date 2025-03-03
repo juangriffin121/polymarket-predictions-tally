@@ -9,6 +9,7 @@ from polymarket_predictions_tally.constants import MAX_QUESTIONS
 from polymarket_predictions_tally.database.read import (
     get_active_question_ids,
     get_all_responses_to_questions,
+    get_all_users,
     get_latest_responses_to_questions,
     get_previous_user_responses,
     get_questions_from_ids,
@@ -82,3 +83,9 @@ def history(username):
         stats = get_stats(conn, user.id)
 
         prints.history(user, responses, questions, stats)
+
+
+def show_users():
+    with sqlite3.connect(DB_PATH) as conn:
+        users = get_all_users(conn)
+        prints.users(users)

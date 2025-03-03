@@ -51,7 +51,6 @@ def history(
     click.echo(f"User [{user.username}]")
     click.echo("Responses:")
     for question, response in zip(questions, responses):
-        print(question.outcome)
         match question.outcome:
             case None:
                 correct = None

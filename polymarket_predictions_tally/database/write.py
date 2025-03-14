@@ -9,7 +9,6 @@ from polymarket_predictions_tally.database.read import (
 )
 from polymarket_predictions_tally.database.utils import load_sql_query
 from polymarket_predictions_tally.logic import (
-    Event,
     InvalidResponse,
     Question,
     User,

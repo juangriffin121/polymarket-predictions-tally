@@ -145,8 +145,22 @@ def get_resolved_outcome(entry: dict) -> bool | None:
         - False: Market resolved to "No"
         - None: Market not resolved or data format error
     """
+
+    resolved_status = entry.get("umaResolutionStatus")
+
+    if resolved_status is not None and resolved_status != "resolved":
+        print(f"{entry.get('question')} had resolved status not resolved")
+        return None
     # Check if market is resolved
-    if entry.get("umaResolutionStatus") != "resolved":
+    try:
+        end_date = datetime.fromisoformat(entry["endDate"].replace("Z", "+00:00"))
+    except:
+        try:
+            end_date = datetime.fromisoformat(entry["endDateIso"])
+        except:
+            end_date = None
+    if end_date is not None and end_date > datetime.now(timezone.utc):
+        print(f"[{end_date}] {entry.get('question')} hasnt reached its end date")
         return None
 
     try:
@@ -160,9 +174,16 @@ def get_resolved_outcome(entry: dict) -> bool | None:
         )
 
         if winning_idx is None or winning_idx >= len(outcomes):
+            print("Reached an unexpected point, useful info for debuging")
+            print(f"[{end_date}] {entry.get('question')} escaped from winning_idx")
+            print(outcome_prices)
+            print(outcomes)
+            print()
+
             return None  # No valid winning outcome
 
         return outcomes[winning_idx] == "Yes"
 
     except (KeyError, json.JSONDecodeError):
+        print(KeyError, json.JSONDecodeError)
         return None  # Handle missing fields or invalid JSON

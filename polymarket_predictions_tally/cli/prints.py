@@ -67,7 +67,9 @@ def history(
             case None:
                 color = reset
 
-        click.echo(f"\t{question.question} {color}[{response.answer}]{reset}")
+        click.echo(
+            f"\t[{question.id}] [{question.end_date}] {question.question} {color}[{response.answer}]{reset}"
+        )
 
     click.echo("")
     click.echo(f"User: [{user.username}]")

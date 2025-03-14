@@ -1,5 +1,4 @@
 import sqlite3
-from typing import List
 from polymarket_predictions_tally.database.utils import load_sql_query, newest_response
 from polymarket_predictions_tally.logic import Question, Response, User
 

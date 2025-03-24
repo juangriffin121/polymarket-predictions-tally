@@ -1,6 +1,6 @@
 import sqlite3
 from polymarket_predictions_tally.database.utils import load_sql_query, newest_response
-from polymarket_predictions_tally.logic import Question, Response, User
+from polymarket_predictions_tally.logic import Position, Question, Response, User
 
 
 def get_user(conn: sqlite3.Connection, username: str) -> User | None:
@@ -216,3 +216,26 @@ def get_stats(conn: sqlite3.Connection, user_id: int) -> tuple[int, int]:
     query = load_sql_query("get_stats.sql")
     cursor.execute(query, (user_id,))
     return cursor.fetchone()
+
+
+def get_user_positions(
+    conn: sqlite3.Connection,
+    api_questions: list[Question],
+    user_id: int,
+) -> list[Position | None]:
+    previous_user_responses = []
+    for question in api_questions:
+        response = get_user_position(conn, user_id, question.id)
+        previous_user_responses.append(response)
+    return previous_user_responses
+
+
+def get_user_position(
+    conn: sqlite3.Connection, user_id: int, question_id: int
+) -> Position | None:
+    cursor = conn.cursor()
+    query = load_sql_query("get_user_position.sql")
+    cursor.execute(query, (user_id, question_id))
+    results = cursor.fetchone()
+    if results is not None:
+        return Position(*results)

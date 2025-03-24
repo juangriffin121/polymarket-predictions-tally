@@ -35,3 +35,9 @@ def history(username):
 @cli.command()  # of group cli
 def users():
     show_users()
+
+
+@cli.command()  # of group cli
+@click.argument("username")
+def bet(username):
+    integration.bet(username)

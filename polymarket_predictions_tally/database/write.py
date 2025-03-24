@@ -7,10 +7,12 @@ from polymarket_predictions_tally.database.read import (
     is_question_in_db,
     validate_response,
 )
-from polymarket_predictions_tally.database.utils import load_sql_query
+from polymarket_predictions_tally.database.utils import get_new_position, load_sql_query
 from polymarket_predictions_tally.logic import (
     InvalidResponse,
+    Position,
     Question,
+    Transaction,
     User,
     Response,
 )
@@ -189,3 +191,64 @@ def update_users_stats(
         right_count = sum([correct for _, correct in info])
         wrong_count = len(info) - right_count
         update_user_stats(conn, user.id, right_count, wrong_count)
+
+
+def perform_transaction(
+    conn: sqlite3.Connection, transaction: Transaction, position: Position | None
+):
+    if position is None:
+        position = Position(
+            user_id=transaction.user_id,
+            question_id=transaction.question_id,
+            stake_yes=0.0,
+            stake_no=0.0,
+        )
+    assert position.question_id == transaction.question_id
+    assert position.user_id == transaction.user_id
+    insert_transaction(conn, transaction)
+    new_position, budget_delta = get_new_position(position, transaction)
+    update_position(conn, new_position)
+    update_user_budget(conn, position.user_id, budget_delta)
+
+
+def insert_transaction(conn: sqlite3.Connection, transaction: Transaction):
+    cursor = conn.cursor()
+    insert_transaction_query = load_sql_query("insert_transaction.sql")
+    cursor.execute(
+        insert_transaction_query,
+        (
+            transaction.user_id,
+            transaction.question_id,
+            transaction.transaction_type,
+            transaction.answer,
+            transaction.amount,
+        ),
+    )
+    conn.commit()
+
+
+def update_position(conn: sqlite3.Connection, position: Position):
+    cursor = conn.cursor()
+    update_position_query = load_sql_query("upsert_position.sql")
+    cursor.execute(
+        update_position_query,
+        (
+            position.user_id,
+            position.question_id,
+            position.stake_yes,
+            position.stake_no,
+            position.stake_yes,  # repetition for the case on conflict, trash syntax idk
+            position.stake_no,
+        ),
+    )
+    conn.commit()
+
+
+def update_user_budget(conn: sqlite3.Connection, user_id: int, budget_delta: float):
+    cursor = conn.cursor()
+    update_user_budget_query = load_sql_query("update_user_budget.sql")
+    cursor.execute(
+        update_user_budget_query,
+        (budget_delta, user_id),
+    )
+    conn.commit()

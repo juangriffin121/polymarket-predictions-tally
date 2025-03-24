@@ -87,3 +87,20 @@ class Response:
 
 class InvalidResponse(Exception):
     pass
+
+
+@dataclass
+class Transaction:
+    user_id: int
+    question_id: int
+    transaction_type: str  # eg buy or sell
+    answer: bool  # yes or no
+    amount: float
+
+
+@dataclass
+class Position:
+    user_id: int
+    question_id: int
+    stake_yes: float
+    stake_no: float

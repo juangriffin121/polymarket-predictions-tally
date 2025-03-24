@@ -48,17 +48,20 @@ CREATE TABLE IF NOT EXISTS transactions (
     user_id INTEGER NOT NULL,
     question_id INTEGER NOT NULL,  
     transaction_type TEXT NOT NULL,  -- e.g., 'buy', 'sell'
+    answer BOOLEAN NOT NULL, --eg., 'yes', 'no'
     amount REAL NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
 -- Optional: Positions table to track open positions (aggregated stakes)
 CREATE TABLE IF NOT EXISTS positions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     question_id INTEGER NOT NULL,
-    stake REAL NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users_money(id),
+    stake_yes REAL NOT NULL,
+    stake_no REAL NOT NULL,
+    PRIMARY KEY (user_id, question_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (question_id) REFERENCES questions(id)
 );

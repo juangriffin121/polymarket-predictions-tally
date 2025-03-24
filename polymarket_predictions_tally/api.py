@@ -159,8 +159,11 @@ def get_resolved_outcome(entry: dict) -> bool | None:
             end_date = datetime.fromisoformat(entry["endDateIso"])
         except:
             end_date = None
+
+    if end_date is not None and end_date.tzinfo is None:
+        end_date = end_date.replace(tzinfo=timezone.utc)
     if end_date is not None and end_date > datetime.now(timezone.utc):
-        print(f"[{end_date}] {entry.get('question')} hasnt reached its end date")
+        # print(f"[{end_date}] {entry.get('question')} hasnt reached its end date")
         return None
 
     try:

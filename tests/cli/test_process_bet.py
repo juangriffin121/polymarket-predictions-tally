@@ -7,7 +7,7 @@ from polymarket_predictions_tally.logic import Position, Question, User
 
 
 @click.command
-def process_prediction_cmd():
+def process_bet_cmd():
     user = User(id=1, username="Alice", budget=100)
     question1 = Question(
         id=1,
@@ -40,20 +40,55 @@ def process_prediction_cmd():
         click.echo("No new transactions were processed")
 
 
-def test_process_prediction_cmd():
+def test_process_bet():
     runner = CliRunner()
-    result = runner.invoke(process_prediction_cmd, input="1\ny\n100")
+    result = runner.invoke(process_bet_cmd, input="1\ny\n100")
     # print(result.output)
     assert "Responded: 1" in result.output
     assert "Answer: True" in result.output
     assert "Bet: 100.0" in result.output
 
-    result = runner.invoke(process_prediction_cmd, input="2\ny\nsell\n5\n")
+    result = runner.invoke(process_bet_cmd, input="2\ny\nsell\n5\n")
     print(result.output)
     assert "Responded: 2" in result.output
     assert "Answer: True" in result.output
     assert "Bet: 5.0" in result.output
 
-    result = runner.invoke(process_prediction_cmd, input="2\ny\nsell\n20\nn\n")
+    result = runner.invoke(process_bet_cmd, input="2\ny\nsell\n20\nn\n")
     print(result.output)
+    assert "No new transactions were processed" in result.output
+
+
+def test_process_bet_buy():
+    # Simulate a scenario where the user selects the first question (which has no existing position),
+    # confirms a "Yes" answer, and then enters a valid amount (100) to buy.
+    runner = CliRunner()
+    # Inputs: "1" to choose the first question, "y" to confirm the answer (buy), "100" as the amount.
+    result = runner.invoke(process_bet_cmd, input="1\ny\n100\n")
+    # Expect that the chosen question is the first one (id 1) and that a transaction is created.
+    assert "Responded: 1" in result.output
+    assert "Answer: True" in result.output
+    assert "Bet: 100.0" in result.output
+
+
+def test_process_bet_sell_existing():
+    # Simulate a scenario where the user selects the second question, which already has an existing position.
+    # In this test, the position exists (e.g., with some stake for "Yes"), so the user opts to sell.
+    # Inputs: "2" to choose the second question, "y" to confirm answer, "sell" as the transaction type,
+    # then "5" as the amount.
+    runner = CliRunner()
+    result = runner.invoke(process_bet_cmd, input="2\ny\nsell\n5\n")
+    assert "Responded: 2" in result.output
+    assert "Answer: True" in result.output
+    assert "Bet: 5.0" in result.output
+
+
+def test_process_bet_no_transaction():
+    # Simulate a scenario where the user selects the second question and attempts a sell transaction,
+    # but the amount entered exceeds their allowed limit (or is invalid), and then opts not to try again.
+    # This should result in no new transaction being processed.
+    runner = CliRunner()
+    # Inputs: "2" to choose the second question, "y" to confirm answer,
+    # then "sell" as the transaction type, "20" as the invalid amount, and finally "n" to not retry.
+    result = runner.invoke(process_bet_cmd, input="2\ny\nsell\n20\nn\n")
     assert "No new transactions were processed" in result.output

@@ -194,7 +194,10 @@ def update_users_stats(
 
 
 def perform_transaction(
-    conn: sqlite3.Connection, transaction: Transaction, position: Position | None
+    conn: sqlite3.Connection,
+    transaction: Transaction,
+    position: Position | None,
+    question: Question,
 ):
     if position is None:
         position = Position(
@@ -204,9 +207,12 @@ def perform_transaction(
             stake_no=0.0,
         )
     assert position.question_id == transaction.question_id
+    assert position.question_id == question.id
     assert position.user_id == transaction.user_id
+    prices = question.outcome_probs
+    price = prices[0] if transaction.answer else prices[1]
     insert_transaction(conn, transaction)
-    new_position, budget_delta = get_new_position(position, transaction)
+    new_position, budget_delta = get_new_position(position, transaction, price)
     update_position(conn, new_position)
     update_user_budget(conn, position.user_id, budget_delta)
 

@@ -106,4 +106,4 @@ def bet(username):
         )
         if transaction is not None:
             insert_question(conn, question)
-            perform_transaction(conn, transaction, position)
+            perform_transaction(conn, transaction, position, question)

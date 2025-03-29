@@ -141,6 +141,8 @@ def get_transaction(
     user: User, question: Question, position: Optional[Position]
 ) -> Optional[Transaction]:
     answer = click.confirm(question.question)
+    prices = question.outcome_probs
+    price = prices[0] if answer else prices[1]
     if position is not None:
         stake = position.stake_yes if answer else position.stake_no
         if stake == 0.0:
@@ -151,14 +153,14 @@ def get_transaction(
             max_amount = user.budget
         else:
             transaction_type = click.prompt(
-                f"Select transaction type\nYou can sell up to {stake} and buy up to {user.budget}",
+                f"Select transaction type\nYou can sell up to {stake * price} and buy up to {user.budget}",
                 type=click.Choice(["buy", "sell"], case_sensitive=False),
             )
 
         if transaction_type == "buy":
             max_amount = user.budget
         elif transaction_type == "sell":
-            max_amount = stake
+            max_amount = stake * price
         else:
             raise ValueError(
                 "Invalid transaction type, click should prevent this, debug time"

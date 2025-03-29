@@ -12,7 +12,7 @@ def process_prediction_cmd():
     question1 = Question(
         id=1,
         question="Will Julius Caesar win the 100 BC roman dictatorial election?",
-        outcome_probs=[90.0, 10.0],
+        outcome_probs=[0.9, 0.1],
         outcomes=["Yes", "No"],
         end_date=datetime(100, 10, 10),
         outcome=None,
@@ -22,7 +22,7 @@ def process_prediction_cmd():
     question2 = Question(
         id=2,
         question="Will Alexander the Great win the 500 BC macedonian dictatorial election?",
-        outcome_probs=[90.0, 10.0],
+        outcome_probs=[0.9, 0.1],
         outcomes=["Yes", "No"],
         end_date=datetime(500, 10, 10),
         outcome=None,
@@ -54,6 +54,6 @@ def test_process_prediction_cmd():
     assert "Answer: True" in result.output
     assert "Bet: 5.0" in result.output
 
-    result = runner.invoke(process_prediction_cmd, input="2\ny\nsell\n11\nn\n")
+    result = runner.invoke(process_prediction_cmd, input="2\ny\nsell\n20\nn\n")
     print(result.output)
     assert "No new transactions were processed" in result.output

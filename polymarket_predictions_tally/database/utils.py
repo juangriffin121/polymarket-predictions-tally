@@ -13,13 +13,13 @@ def load_sql_query(filename: str) -> str:
 
 
 def get_new_position(
-    old_position: Position, transaction: Transaction
+    old_position: Position, transaction: Transaction, price: float
 ) -> tuple[Position, float]:
     assert transaction.transaction_type in {"buy", "sell"}
     buy = transaction.transaction_type == "buy"
     sign = 1 if buy else -1
     if transaction.answer is True:
-        new_stake = old_position.stake_yes + sign * transaction.amount
+        new_stake = old_position.stake_yes + sign * transaction.amount / price
         assert new_stake > 0
         return (
             Position(
@@ -31,7 +31,7 @@ def get_new_position(
             -sign * transaction.amount,
         )
     else:
-        new_stake = old_position.stake_no + sign * transaction.amount
+        new_stake = old_position.stake_no + sign * transaction.amount / price
         assert new_stake > 0
         return (
             Position(

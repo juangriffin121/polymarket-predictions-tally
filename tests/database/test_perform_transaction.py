@@ -1,8 +1,9 @@
+from datetime import datetime
 import sqlite3
 
 from polymarket_predictions_tally.database.utils import load_sql_query
 from polymarket_predictions_tally.database.write import insert_user, perform_transaction
-from polymarket_predictions_tally.logic import Position, Transaction, User
+from polymarket_predictions_tally.logic import Position, Question, Transaction, User
 
 
 def insert_position(conn: sqlite3.Connection, position: Position):
@@ -37,8 +38,19 @@ def test_perform_transaction_valid():
             amount=100,
         )
 
+        question = Question(
+            id=101,
+            question="Will Julius Caesar win the 100 BC roman dictatorial election?",
+            outcome_probs=[0.9, 0.1],
+            outcomes=["Yes", "No"],
+            end_date=datetime(100, 10, 10),
+            outcome=None,
+            description="",
+            tag="Politics",
+        )
+
         # Perform the transaction.
-        perform_transaction(conn, transaction, None)
+        perform_transaction(conn, transaction, None, question)
 
         # Verify that a transaction record was inserted.
         cur = conn.cursor()
@@ -58,7 +70,7 @@ def test_perform_transaction_valid():
         )
         pos = cur.fetchone()
         assert pos is not None
-        expected_stake_yes = 0 + transaction.amount
+        expected_stake_yes = 0 + transaction.amount / question.outcome_probs[0]
         expected_stake_no = 0
         assert pos[0] == expected_stake_yes
         assert pos[1] == expected_stake_no

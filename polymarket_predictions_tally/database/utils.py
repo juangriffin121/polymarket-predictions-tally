@@ -32,7 +32,7 @@ def get_new_position(
         )
     else:
         new_stake = old_position.stake_no + sign * transaction.amount / price
-        assert new_stake > 0
+        assert new_stake >= 0
         return (
             Position(
                 user_id=old_position.user_id,

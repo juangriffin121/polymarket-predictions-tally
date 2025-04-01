@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
+import json
+from datetime import datetime
 
 from polymarket_predictions_tally.utils import parse_datetime
 
@@ -15,6 +17,23 @@ class Question:
     outcome: Optional[bool]
     end_date: datetime
     description: str
+
+    @classmethod
+    def from_database_entry(
+        cls,
+        entry: tuple[int, str, str, str, str, Optional[bool], str, str],
+    ) -> "Question":
+        (id, question, outcome_probs, outcomes, tag, outcome, end_date, description) = (
+            entry
+        )
+
+        outcome_probs = json.loads(outcome_probs)  # Convert string to list[float]
+        outcomes = json.loads(outcomes)  # Convert string to list[str]
+        end_date = datetime.fromisoformat(end_date)  # Convert string to datetime
+
+        return cls(
+            id, question, outcome_probs, outcomes, tag, outcome, end_date, description
+        )
 
     def __str__(self) -> str:
         date_str = self.end_date.strftime("%b %d, %Y")  # Short readable date

@@ -27,14 +27,20 @@ def prompt_question_selection(
     questions: List[Question], responses: list[Optional[Response]], mode: str
 ) -> tuple[Question, Optional[Response]]:
     options = []
+    max_len = max([len(q.question) for q in questions])
+
     for i, (question, response) in enumerate(zip(questions, responses), 1):
-        status = f"[{response.answer}]" if response else ""
+        status = f"[{response.answer[0]}]" if response else "   "
         options.append(
-            f"{i}. {question.question} [{question.end_date.date()}] {status}".strip()
+            f"| {i} \t| {question.end_date.date()} \t| {status} | {question.question}{' '*(max_len - len(question.question))} |".strip()
         )
 
     # Prompt the user to select a question
-    click.echo("\nAvailable Questions:\n" + "\n".join(options))
+
+    click.echo(f"\n| Nr \t| EndDate\t| Ans | Question{' '*(max_len - 8)} |")
+    bars = f"|-------|---------------|-----|---------{'-'*(max_len - 8)}-|"
+    click.echo(bars)
+    click.echo("\n".join(options))
 
     choice = click.prompt(
         "Select a question by number", type=click.IntRange(1, len(questions))

@@ -1,5 +1,6 @@
+from types import new_class
 from click.utils import echo
-from polymarket_predictions_tally.logic import Question, Response, User
+from polymarket_predictions_tally.logic import Position, Question, Response, User
 import click
 
 
@@ -28,6 +29,34 @@ def inform_users_of_change(
             )
 
     inform_stats_update()
+
+
+def inform_users_of_stocks_change(
+    users: dict[int, User],
+    updated_positions: dict[int, list[Position]],
+    updated_questions: list[Question | None],
+    old_questions: list[Question],
+):
+    updated_questions_dict = {
+        question.id: question for question in updated_questions if question is not None
+    }
+    old_questions_dict = {question.id: question for question in old_questions}
+    for user_id, positions in updated_positions.items():
+        username = users[user_id].username
+        click.echo(username)
+        net_profit = 0.0
+        for position in positions:
+            # can fail in getting question by id
+            new_question = updated_questions_dict[position.question_id]
+            old_question = old_questions_dict[position.question_id]
+            delta_yes = new_question.outcome_probs[0] - old_question.outcome_probs[0]
+            delta_no = new_question.outcome_probs[1] - old_question.outcome_probs[1]
+            profit = delta_yes * position.stake_yes + delta_no * position.stake_no
+            click.echo(
+                f"Question: {new_question.question} StakeYes: {position.stake_yes} DeltaYes: {round(delta_yes, 2)} StakeNo: {position.stake_no} DeltaNo: {round(delta_no,4)} Profit: {round(profit,4)}"
+            )
+            net_profit += profit
+        click.echo(f"NetProfit: {round(net_profit,2)}")
 
 
 def inform_stats_update():

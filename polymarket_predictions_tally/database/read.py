@@ -200,7 +200,7 @@ def get_question_from_id(conn: sqlite3.Connection, question_id: int) -> Question
     query = load_sql_query("get_question_from_id.sql")
     cursor.execute(query, (question_id,))
     results = cursor.fetchone()
-    return Question(*results)
+    return Question.from_database_entry(results)
 
 
 def get_questions_from_ids(conn: sqlite3.Connection, ids: list[int]) -> list[Question]:
@@ -239,3 +239,28 @@ def get_user_position(
     results = cursor.fetchone()
     if results is not None:
         return Position(*results)
+
+
+def get_updated_positions(
+    conn: sqlite3.Connection, updated_questions: list[Question | None]
+) -> dict[int, list[Position]]:
+    positions_by_user = {}
+    for question in updated_questions:
+        if question:
+            positions = get_positions_on_question(conn, question.id)
+            for position in positions:
+                positions_by_user.setdefault(position.user_id, []).append(position)
+    return positions_by_user
+
+
+def get_positions_on_question(
+    conn: sqlite3.Connection, question_id: int
+) -> list[Position]:
+    cursor = conn.cursor()
+    query = load_sql_query("get_positions_on_question.sql")
+    cursor.execute(query, (question_id,))
+    results = cursor.fetchall()
+    positions = []
+    for result in results:
+        positions.append(Position(*result))
+    return positions

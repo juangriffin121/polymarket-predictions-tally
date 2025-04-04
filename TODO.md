@@ -5,7 +5,13 @@
     - update questions
     - if a question is solved update all its responses and transactions and update users stats
     - notify of new stats of users 
+- [ ] implement betting system
+    - [x] cli
+        - [x] transaction prompt
+        - [ ] portfolio choice to sell
+    - [x] perform transaction
+    - [ ] update database
+        - [x] inform users of stock change upon updating
+        - [ ] automatic stock sells upon market completion   
 - [ ] fzf integration
 - [ ] implement user history 
-
-

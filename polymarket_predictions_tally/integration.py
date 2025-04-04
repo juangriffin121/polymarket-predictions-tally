@@ -36,7 +36,7 @@ from polymarket_predictions_tally.database.write import (
 )
 
 
-def run_user_session(username: str, conn):
+def predict(username: str, conn):
     user = get_or_make_user(conn, username)
     api_questions = api.get_questions(tag="Politics", limit=MAX_QUESTIONS)
     update_present_questions(conn, api_questions)

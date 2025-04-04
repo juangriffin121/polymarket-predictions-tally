@@ -5,7 +5,6 @@ from click.utils import echo
 
 from polymarket_predictions_tally import integration
 from polymarket_predictions_tally.integration import (
-    run_user_session,
     show_users,
     update_database,
 )
@@ -22,7 +21,7 @@ def cli(ctx: click.Context):
 @click.pass_context
 def predict(ctx, username):
     conn = ctx.obj["conn"]
-    run_user_session(username, conn)
+    integration.predict(username, conn)
 
 
 @cli.command()  # of group cli

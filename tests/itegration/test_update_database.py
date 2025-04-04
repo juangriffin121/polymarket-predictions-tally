@@ -3,7 +3,6 @@ import sqlite3
 
 import click
 from click.testing import CliRunner
-from polymarket_predictions_tally.database.read import validate_response
 from polymarket_predictions_tally.database.utils import load_sql_query
 from polymarket_predictions_tally.database.write import (
     insert_question,

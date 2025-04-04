@@ -29,6 +29,7 @@ from polymarket_predictions_tally.database.write import (
     insert_question,
     insert_response,
     perform_transaction,
+    resolve_updated_positions,
     update_present_questions,
     update_questions,
     update_responses,
@@ -79,8 +80,9 @@ def update_database(conn: sqlite3.Connection):
     users = get_all_users(conn)
     users = {user.id: user for user in users}
     inform_users_of_stocks_change(
-        users, updated_positions, updated_questions, old_questions
+        users, updated_positions, updated_questions, old_questions, resolved_questions
     )
+    resolve_updated_positions(conn, resolved_questions)
 
 
 def history(username, conn: sqlite3.Connection):

@@ -118,7 +118,7 @@ def test_update_database_positions(monkeypatch):
 Detailed description:
 \tQuestion: Will the stock market go up? [Yes]
 Alice
-Question: Will it rain tomorrow? StakeYes: 10.0 DeltaYes: -0.2 StakeNo: 0.0 DeltaNo: 0.2 Profit: -2.0
-Question: Will the stock market go up? StakeYes: 0.0 DeltaYes: 0.5 StakeNo: 20.0 DeltaNo: -0.5 Profit: -10.0
+Question: Will it rain tomorrow? StakeYes: 10.0 DeltaYes: -0.2 StakeNo: 0.0 DeltaNo: 0.2 Profit: -2.0 
+Question: Will the stock market go up? StakeYes: 0.0 DeltaYes: 0.5 StakeNo: 20.0 DeltaNo: -0.5 Profit: -10.0 Sold
 NetProfit: -12.0"""
     assert output.strip() == result.output.strip()

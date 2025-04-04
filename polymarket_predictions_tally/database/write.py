@@ -1,7 +1,10 @@
 import json
+from os import listdir
 import sqlite3
+from sqlite3.dbapi2 import Connection
 
 from polymarket_predictions_tally.database.read import (
+    get_positions_on_question,
     get_user,
     get_user_id_by_name,
     is_question_in_db,
@@ -257,4 +260,50 @@ def update_user_budget(conn: sqlite3.Connection, user_id: int, budget_delta: flo
         update_user_budget_query,
         (budget_delta, user_id),
     )
+    conn.commit()
+
+
+def resolve_updated_positions(
+    conn: sqlite3.Connection,
+    resolved_questions: list[Question],
+):
+    for resolved_question in resolved_questions:
+        positions = get_positions_on_question(conn, resolved_question.id)
+        for position in positions:
+            if position.stake_yes > 0.0:
+                sell_yes = Transaction(
+                    user_id=position.user_id,
+                    question_id=position.question_id,
+                    answer=True,
+                    transaction_type="sell",
+                    amount=position.stake_yes * resolved_question.outcome_probs[0],
+                )
+                perform_transaction(conn, sell_yes, position, resolved_question)
+            # the position in db was updated but perform_transaction needs position from the program too(might have to change that) so im updating it if a transaction was performed
+            position = Position(
+                user_id=position.user_id,
+                question_id=position.question_id,
+                stake_yes=0.0,
+                stake_no=position.stake_no,
+            )
+            if position.stake_no > 0.0:
+                sell_no = Transaction(
+                    user_id=position.user_id,
+                    question_id=position.question_id,
+                    answer=False,
+                    transaction_type="sell",
+                    amount=position.stake_no * resolved_question.outcome_probs[1],
+                )
+                perform_transaction(conn, sell_no, position, resolved_question)
+
+            remove_position(conn, position)
+
+
+def remove_position(conn: sqlite3.Connection, position: Position):
+    # Very careful when using because it removes a position from the db
+    assert position.stake_yes == 0.0
+    assert position.stake_no == 0.0
+    cursor = conn.cursor()
+    remove_position_query = load_sql_query("remove_position.sql")
+    cursor.execute(remove_position_query, (position.user_id, position.question_id))
     conn.commit()

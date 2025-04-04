@@ -30,20 +30,30 @@ def test_bet_session(monkeypatch):
         bet_stdout = runner.invoke(bet_cmd, obj=conn, input=input)
         print(bet_stdout.output)
 
+        # assert spending money reduces alices budget
+        cursor = conn.cursor()
+        results = cursor.execute(
+            "SELECT budget FROM users WHERE username = ?", (alice.username,)
+        )
+        budget = results.fetchone()[0]
+        expected_budget = alice.budget - 100.0
+        assert budget == expected_budget
+
         update_databse_stdout = runner.invoke(update_database_cmd, obj=conn)
         print(update_databse_stdout.output)
-        expected_stdout = """Everything up to date
-Alice
-Question: Will it rain tomorrow? StakeYes: 200.0 DeltaYes: 0.5 StakeNo: 0.0 DeltaNo: -0.5 Profit: 100.0
+        expected_stdout = """Alice
+Question: Will it rain tomorrow? StakeYes: 200.0 DeltaYes: 0.5 StakeNo: 0.0 DeltaNo: -0.5 Profit: 100.0 Sold
 NetProfit: 100.0"""
 
         # make sure the question is updated correctly
         assert update_databse_stdout.output.strip() == expected_stdout
         cursor = conn.cursor()
         results = cursor.execute(
-            "SELECT budget FROM users WHERE username = Alice",
+            "SELECT budget FROM users WHERE username = ?", (alice.username,)
         )
-        budget = results.fetchone()
+        budget = results.fetchone()[0]
+        expected_budget = alice.budget + 100.0
+        assert budget == expected_budget
         # We need that resolved questions automatically get sold
         # also selling stock prompt
 

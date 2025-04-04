@@ -20,7 +20,7 @@ def get_new_position(
     sign = 1 if buy else -1
     if transaction.answer is True:
         new_stake = old_position.stake_yes + sign * transaction.amount / price
-        assert new_stake > 0
+        assert new_stake >= 0.0
         return (
             Position(
                 user_id=old_position.user_id,
@@ -32,7 +32,7 @@ def get_new_position(
         )
     else:
         new_stake = old_position.stake_no + sign * transaction.amount / price
-        assert new_stake >= 0
+        assert new_stake >= 0.0
         return (
             Position(
                 user_id=old_position.user_id,

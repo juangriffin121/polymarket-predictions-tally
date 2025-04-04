@@ -36,11 +36,13 @@ def inform_users_of_stocks_change(
     updated_positions: dict[int, list[Position]],
     updated_questions: list[Question | None],
     old_questions: list[Question],
+    resolved_questions: list[Question],
 ):
     updated_questions_dict = {
         question.id: question for question in updated_questions if question is not None
     }
     old_questions_dict = {question.id: question for question in old_questions}
+    resolved_question_ids = {question.id for question in resolved_questions}
     for user_id, positions in updated_positions.items():
         username = users[user_id].username
         click.echo(username)
@@ -52,8 +54,9 @@ def inform_users_of_stocks_change(
             delta_yes = new_question.outcome_probs[0] - old_question.outcome_probs[0]
             delta_no = new_question.outcome_probs[1] - old_question.outcome_probs[1]
             profit = delta_yes * position.stake_yes + delta_no * position.stake_no
+            status = "Sold" if position.question_id in resolved_question_ids else ""
             click.echo(
-                f"Question: {new_question.question} StakeYes: {position.stake_yes} DeltaYes: {round(delta_yes, 2)} StakeNo: {position.stake_no} DeltaNo: {round(delta_no,4)} Profit: {round(profit,4)}"
+                f"Question: {new_question.question} StakeYes: {position.stake_yes} DeltaYes: {round(delta_yes, 2)} StakeNo: {position.stake_no} DeltaNo: {round(delta_no,4)} Profit: {round(profit,4)} {status}"
             )
             net_profit += profit
         click.echo(f"NetProfit: {round(net_profit,2)}")

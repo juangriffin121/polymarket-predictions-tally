@@ -3,6 +3,7 @@ from typing import List, Optional
 
 import click
 
+from polymarket_predictions_tally.cli.prints import draw_bar
 from polymarket_predictions_tally.logic import (
     Position,
     Question,
@@ -208,3 +209,35 @@ def get_amount(max_amount: float) -> Optional[float]:
                 continue
             else:
                 return None
+
+
+def prompt_sell(
+    user: User, positions: list[Position], questions: list[Question]
+) -> Transaction | None:
+    position, question = choose_position(positions, questions)
+    transaction = get_transaction(user, question, position)
+    return transaction
+
+
+def choose_position(
+    positions: list[Position], questions: list[Question]
+) -> tuple[Position, Question]:
+    options = []
+    max_len = max([len(q.question) for q in questions])
+    percentage_bar_len = 10
+    for i, (position, question) in enumerate(zip(positions, questions), 1):
+        options.append(
+            f"| {i} \t| {question.end_date.date()} \t| {question.question}{' '*(max_len - len(question.question))} | {position.stake_yes}\t\t| {draw_bar(question.outcome_probs[0], percentage_bar_len)} | {position.stake_no}\t\t|".strip()
+        )
+
+    click.echo(
+        f"\n| Nr \t| EndDate\t| Question{' '*(max_len - 8)} | StakeYes\t| Prices(Yes/No){' '*(percentage_bar_len + 10 -15)}| StakeNo\t\t|"
+    )
+    bars = f"|-------|---------------|---------{'-'*(max_len - 8)}-|----------------|{'-'*(percentage_bar_len + 10)}|------------------|"
+    click.echo(bars)
+    click.echo("\n".join(options), color=True)
+
+    choice = click.prompt(
+        "Select a position by number", type=click.IntRange(1, len(positions))
+    )
+    return positions[choice - 1], questions[choice - 1]

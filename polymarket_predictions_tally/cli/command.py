@@ -53,3 +53,11 @@ def users(ctx):
 def bet(ctx, username):
     conn = ctx.obj["conn"]
     integration.bet(username, conn)
+
+
+@cli.command()  # of group cli
+@click.argument("username")
+@click.pass_context
+def sell(ctx, username):
+    conn = ctx.obj["conn"]
+    integration.sell(username, conn)

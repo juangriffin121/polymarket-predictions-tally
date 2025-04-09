@@ -41,12 +41,11 @@ class Question:
             f"{o}: {p:.2f}" for o, p in zip(self.outcomes, self.outcome_probs)
         )
         short_desc = self.description.split("\n")[0][:100]  # First line, max 100 chars
-        return f"""
-            Question {self.id}: {self.question}
-                [{self.tag}]
-                Ends:           {date_str}
-                Probabilities:  {outcomes_str}
-                Description:    {short_desc}...
+        return f"""Question {self.id}: {self.question}
+\t[{self.tag}]
+\tEnds:           {date_str}
+\tProbabilities:  {outcomes_str}
+\tDescription:    {short_desc}...
             """
 
 

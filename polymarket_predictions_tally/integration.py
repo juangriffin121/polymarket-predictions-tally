@@ -1,6 +1,7 @@
 import sqlite3
 from polymarket_predictions_tally import api
 from polymarket_predictions_tally.cli import prints
+from polymarket_predictions_tally.cli import user_input
 from polymarket_predictions_tally.cli.prints import (
     inform_users_of_change,
     inform_users_of_stocks_change,
@@ -8,8 +9,10 @@ from polymarket_predictions_tally.cli.prints import (
 from polymarket_predictions_tally.cli.user_input import (
     process_bet,
     process_prediction,
+    prompt_sell,
 )
 from polymarket_predictions_tally.constants import MAX_QUESTIONS
+from polymarket_predictions_tally.database import read
 from polymarket_predictions_tally.database.read import (
     get_active_question_ids,
     get_all_responses_to_questions,
@@ -85,7 +88,7 @@ def update_database(conn: sqlite3.Connection):
     resolve_updated_positions(conn, resolved_questions)
 
 
-def history(username, conn: sqlite3.Connection):
+def history(username: str, conn: sqlite3.Connection):
     user = get_user(conn, username)
     if user is None:
         prints.user_not_in_db(username)
@@ -105,7 +108,7 @@ def show_users(conn: sqlite3.Connection):
     prints.users(users)
 
 
-def bet(username, conn: sqlite3.Connection):
+def bet(username: str, conn: sqlite3.Connection):
     user = get_or_make_user(conn, username)
     api_questions = api.get_questions(tag="Politics", limit=MAX_QUESTIONS)
     update_present_questions(conn, api_questions)
@@ -114,3 +117,11 @@ def bet(username, conn: sqlite3.Connection):
     if transaction is not None:
         insert_question(conn, question)
         perform_transaction(conn, transaction, position, question)
+
+
+def sell(username: str, conn: sqlite3.Connection):
+    user = get_user(conn, username)
+    assert user is not None
+    positions = read.get_all_user_positions(conn, user.id)
+    questions = read.get_questions_from_positions(conn, positions)
+    prompt_sell(user, positions, questions)

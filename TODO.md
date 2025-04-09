@@ -12,6 +12,6 @@
     - [x] perform transaction
     - [ ] update database
         - [x] inform users of stock change upon updating
-        - [ ] automatic stock sells upon market completion   
+        - [X] automatic stock sells upon market completion   
 - [ ] fzf integration
-- [ ] implement user history 
+- [x] implement user history 

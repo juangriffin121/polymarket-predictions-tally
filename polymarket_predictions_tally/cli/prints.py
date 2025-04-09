@@ -111,3 +111,18 @@ def history(
 def users(users_list: list[User]):
     for user in users_list:
         click.echo(f"{user.username}")
+
+
+def draw_bar(prob_yes, bar_length=20):
+    percent_yes = int(prob_yes * 100)
+    percent_no = 100 - percent_yes
+
+    cells_yes = int(prob_yes * bar_length)
+    cells_no = bar_length - cells_yes
+
+    red = "\033[91m"
+    green = "\033[92m"
+    reset = "\033[0m"
+
+    bar = f"{green}{percent_yes}% {'█' * cells_yes}{red}{'█' * cells_no} {percent_no}%{reset}"
+    return bar

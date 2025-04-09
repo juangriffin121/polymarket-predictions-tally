@@ -264,3 +264,24 @@ def get_positions_on_question(
     for result in results:
         positions.append(Position(*result))
     return positions
+
+
+def get_all_user_positions(conn: sqlite3.Connection, user_id: int) -> list[Position]:
+    cursor = conn.cursor()
+    query = load_sql_query("get_all_user_positions.sql")
+    cursor.execute(query, (user_id,))
+    results = cursor.fetchall()
+    positions = []
+    for result in results:
+        positions.append(Position(*result))
+    return positions
+
+
+def get_questions_from_positions(
+    conn: sqlite3.Connection, positions: list[Position]
+) -> list[Question]:
+    questions = [
+        get_question_from_id(conn, position.question_id) for position in positions
+    ]
+    assert all(question is not None for question in questions)
+    return questions

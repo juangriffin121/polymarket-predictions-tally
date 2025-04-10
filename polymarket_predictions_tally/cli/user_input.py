@@ -213,10 +213,10 @@ def get_amount(max_amount: float) -> Optional[float]:
 
 def prompt_sell(
     user: User, positions: list[Position], questions: list[Question]
-) -> Transaction | None:
+) -> tuple[Transaction | None, Position, Question]:
     position, question = choose_position(positions, questions)
     transaction = get_transaction(user, question, position)
-    return transaction
+    return transaction, position, question
 
 
 def choose_position(

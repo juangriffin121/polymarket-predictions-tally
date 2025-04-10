@@ -1,7 +1,6 @@
 import sqlite3
 from polymarket_predictions_tally import api
 from polymarket_predictions_tally.cli import prints
-from polymarket_predictions_tally.cli import user_input
 from polymarket_predictions_tally.cli.prints import (
     inform_users_of_change,
     inform_users_of_stocks_change,
@@ -124,4 +123,6 @@ def sell(username: str, conn: sqlite3.Connection):
     assert user is not None
     positions = read.get_all_user_positions(conn, user.id)
     questions = read.get_questions_from_positions(conn, positions)
-    prompt_sell(user, positions, questions)
+    transaction, position, question = prompt_sell(user, positions, questions)
+    if transaction:
+        perform_transaction(conn, transaction, position, question)

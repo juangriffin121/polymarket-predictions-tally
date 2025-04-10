@@ -10,7 +10,6 @@ from polymarket_predictions_tally.database.write import insert_user
 from polymarket_predictions_tally.integration import (
     bet,
     history,
-    predict,
     update_database,
 )
 from polymarket_predictions_tally.logic import Question, User

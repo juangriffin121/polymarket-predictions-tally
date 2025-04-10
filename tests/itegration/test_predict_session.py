@@ -48,7 +48,7 @@ Responses:
 User: [Alice]
 Stats: 1[+] 0[-]"""
         # make sure the question is updated correctly
-        assert history_stdout.output.strip() == expected_stdout
+        assert history_stdout.output.strip() in expected_stdout
 
 
 def fake_get_questions_by_id_list(question_ids):

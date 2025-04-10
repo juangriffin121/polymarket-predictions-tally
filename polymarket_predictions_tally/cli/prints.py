@@ -43,10 +43,21 @@ def inform_users_of_stocks_change(
     }
     old_questions_dict = {question.id: question for question in old_questions}
     resolved_question_ids = {question.id for question in resolved_questions}
+
+    bar_length = 10
+    max_len = max([len(q.question) for q in old_questions])
     for user_id, positions in updated_positions.items():
         username = users[user_id].username
         click.echo(username)
         net_profit = 0.0
+        changes_whitespace = " " * (bar_length - len("NewPrices") + 14)
+
+        click.echo(
+            f"| Question{' '*(max_len - len('Question'))} | StakeYes | DeltaYes | NewPrices {changes_whitespace} | DeltaNo | StakeNo\t | Profit\t | Status\t |"
+        )
+        click.echo(
+            f"|------------------------------|----------|----------|---------------------------|---------|-------------|---------------|---------------|"
+        )
         for position in positions:
             # can fail in getting question by id
             new_question = updated_questions_dict[position.question_id]
@@ -54,12 +65,30 @@ def inform_users_of_stocks_change(
             delta_yes = new_question.outcome_probs[0] - old_question.outcome_probs[0]
             delta_no = new_question.outcome_probs[1] - old_question.outcome_probs[1]
             profit = delta_yes * position.stake_yes + delta_no * position.stake_no
-            status = "Sold" if position.question_id in resolved_question_ids else ""
+            delta_yes_str = print_delta(delta_yes)
+            delta_no_str = print_delta(delta_no)
+            status = (
+                "Sold " if position.question_id in resolved_question_ids else "Active"
+            )
             click.echo(
-                f"Question: {new_question.question} StakeYes: {position.stake_yes} DeltaYes: {round(delta_yes, 2)} StakeNo: {position.stake_no} DeltaNo: {round(delta_no,4)} Profit: {round(profit,4)} {status}"
+                f"| {new_question.question}{' '*(max_len - len(new_question.question))} | {position.stake_yes}\t  | {delta_yes_str}{' '*(len('StakeYes') - 4)} | {draw_bar(new_question.outcome_probs[0], bar_length)} | {delta_no_str}{' '*(len('DeltaNo') - 4)} | {position.stake_no}\t | {print_profit(profit)}\t | {status}\t |",
+                color=True,
             )
             net_profit += profit
-        click.echo(f"NetProfit: {round(net_profit,2)}")
+        click.echo(f"\nNetProfit: {print_profit(net_profit)}", color=True)
+
+
+def print_delta(delta: float):
+    sign = "+" if delta > 0 else "-"
+    return f"{sign}{abs(round(delta*100))}%"
+
+
+def print_profit(profit: float):
+    sign = "+" if profit > 0 else "-"
+    arrow = "" if profit > 0 else ""
+    color = "\033[32m" if profit > 0 else "\033[31m"  # green / red
+    reset = "\033[0m"
+    return f"{color}{sign}{abs(round(profit, 4))}{arrow}{reset}"
 
 
 def inform_stats_update():
@@ -124,5 +153,5 @@ def draw_bar(prob_yes, bar_length=20):
     green = "\033[92m"
     reset = "\033[0m"
 
-    bar = f"{green}{percent_yes}% {'█' * cells_yes}{red}{'█' * cells_no} {percent_no}%{reset}"
+    bar = f"{green}{percent_yes}%\t{'█' * cells_yes}{red}{'█' * cells_no} {percent_no}%\t{reset}"
     return bar

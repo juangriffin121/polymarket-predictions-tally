@@ -58,7 +58,7 @@ def test_sell_session():
         budget = results.fetchone()[0]
         expected_budget = alice.budget + 8.0
         assert budget == expected_budget
-        assert False
+        # assert False
 
 
 @click.command

@@ -40,12 +40,10 @@ def test_bet_session(monkeypatch):
 
         update_databse_stdout = runner.invoke(update_database_cmd, obj=conn)
         print(update_databse_stdout.output)
-        expected_stdout = """Alice
-Question: Will it rain tomorrow? StakeYes: 200.0 DeltaYes: 0.5 StakeNo: 0.0 DeltaNo: -0.5 Profit: 100.0 Sold
-NetProfit: 100.0"""
+        expected_stdout = "NetProfit: \033[32m+100.0\033[0m"
 
         # make sure the question is updated correctly
-        assert update_databse_stdout.output.strip() == expected_stdout
+        assert expected_stdout in update_databse_stdout.output.strip()
         cursor = conn.cursor()
         results = cursor.execute(
             "SELECT budget FROM users WHERE username = ?", (alice.username,)

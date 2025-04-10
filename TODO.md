@@ -15,3 +15,7 @@
         - [X] automatic stock sells upon market completion   
 - [ ] fzf integration
 - [x] implement user history 
+
+
+# Posible problems
+not updating stocks in db when api calls from bet session 

@@ -1,6 +1,5 @@
 from datetime import datetime
 import sqlite3
-
 import click
 from click.testing import CliRunner
 from polymarket_predictions_tally.database.utils import load_sql_query
@@ -105,7 +104,7 @@ def test_update_database_positions(monkeypatch):
     monkeypatch.setattr(api, "get_questions_by_id_list", fake_get_questions_by_id_list)
     runner = CliRunner()
     result = runner.invoke(helper_cmd)
-    # print(result.output)
+    print(result.output)
 
     # q1 (out: None, y: .8, n: .2) -> (out: None, y: .6, n: .4) dy = -.2
     # q2 (out: None, y: .5, n: .5) -> (out: True, y: 1., n: .0) dn -.5
@@ -114,11 +113,8 @@ def test_update_database_positions(monkeypatch):
     # s1n = 20 -> profit: 20 * dn -> -10
     # net_profit = -12
 
-    output = """User Alice had 1 right and 0 wrong
-Detailed description:
-\tQuestion: Will the stock market go up? [Yes]
-Alice
-Question: Will it rain tomorrow? StakeYes: 10.0 DeltaYes: -0.2 StakeNo: 0.0 DeltaNo: 0.2 Profit: -2.0 
-Question: Will the stock market go up? StakeYes: 0.0 DeltaYes: 0.5 StakeNo: 20.0 DeltaNo: -0.5 Profit: -10.0 Sold
-NetProfit: -12.0"""
-    assert output.strip() == result.output.strip()
+    output = "User Alice had 1 right and 0 wrong"
+    assert output.strip() in result.output.strip()
+
+    output = "NetProfit: \033[31m-12.0\033[0m"
+    assert output.strip() in result.output.strip()

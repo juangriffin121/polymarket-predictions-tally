@@ -117,21 +117,24 @@ def prompt_question_selection_for_bet(
     questions: List[Question], positions: list[Optional[Position]]
 ) -> tuple[Question, Optional[Position]]:
     options = []
-    for i, (question, position) in enumerate(zip(questions, positions), 1):
-        status = (
-            f"[Yes: {position.stake_yes}$] [No: {position.stake_no}$]"
-            if position
-            else ""
-        )
+    max_len = max([len(q.question) for q in questions])
+    percentage_bar_len = 10
+    for i, (position, question) in enumerate(zip(positions, questions), 1):
+        stake_yes = position.stake_yes if position else ""
+        stake_no = position.stake_no if position else ""
         options.append(
-            f"{i}.\t{question.question} [{question.end_date.date()}] {status}".strip()
+            f"| {i} \t| {question.end_date.date()} \t| {question.question}{' '*(max_len - len(question.question))} | {stake_yes}\t\t| {draw_bar(question.outcome_probs[0], percentage_bar_len)} | {stake_no}\t\t|".strip()
         )
 
-    # Prompt the user to select a question
-    click.echo("\nAvailable Questions:\n" + "\n".join(options))
+    click.echo(
+        f"\n| Nr \t| EndDate\t| Question{' '*(max_len - 8)} | StakeYes\t| Prices(Yes/No){' '*(percentage_bar_len + 10 - 11)}| StakeNo\t|"
+    )
+    bars = f"|-------|---------------|---------{'-'*(max_len - 8)}-|-----------|{'-'*(percentage_bar_len + 10 + 4)}|--------------|"
+    click.echo(bars)
+    click.echo("\n".join(options), color=True)
 
     choice = click.prompt(
-        "Select a question by number", type=click.IntRange(1, len(questions))
+        "Select a question by number", type=click.IntRange(1, len(positions))
     )
 
     return questions[choice - 1], positions[choice - 1]

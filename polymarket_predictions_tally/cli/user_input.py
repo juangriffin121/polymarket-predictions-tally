@@ -120,10 +120,12 @@ def prompt_question_selection_for_bet(
     max_len = max([len(q.question) for q in questions])
     percentage_bar_len = 10
     for i, (position, question) in enumerate(zip(positions, questions), 1):
-        stake_yes = position.stake_yes if position else ""
-        stake_no = position.stake_no if position else ""
+        stake_yes = str(round(position.stake_yes, 1)) if position else ""
+        stake_yes = f"{stake_yes}{' '*(10 - len(stake_yes))}"
+        stake_no = str(round(position.stake_no, 1)) if position else ""
+        stake_no = f"{stake_no}{' '*(10 - len(stake_no))}"
         options.append(
-            f"| {i} \t| {question.end_date.date()} \t| {question.question}{' '*(max_len - len(question.question))} | {stake_yes}\t\t| {draw_bar(question.outcome_probs[0], percentage_bar_len)} | {stake_no}\t\t|".strip()
+            f"| {i} \t| {question.end_date.date()} \t| {question.question}{' '*(max_len - len(question.question))} | {stake_yes} | {draw_bar(question.outcome_probs[0], percentage_bar_len)} | {stake_no}|".strip()
         )
 
     click.echo(
@@ -229,14 +231,18 @@ def choose_position(
     max_len = max([len(q.question) for q in questions])
     percentage_bar_len = 10
     for i, (position, question) in enumerate(zip(positions, questions), 1):
+        stake_yes = str(round(position.stake_yes, 1))
+        stake_yes = f"{stake_yes}{' '*(10 - len(stake_yes))}"
+        stake_no = str(round(position.stake_no, 1))
+        stake_no = f"{stake_no}{' '*(10 - len(stake_no))}"
         options.append(
-            f"| {i} \t| {question.end_date.date()} \t| {question.question}{' '*(max_len - len(question.question))} | {position.stake_yes}\t\t| {draw_bar(question.outcome_probs[0], percentage_bar_len)} | {position.stake_no}\t\t|".strip()
+            f"| {i} \t| {question.end_date.date()} \t| {question.question}{' '*(max_len - len(question.question))} | {stake_yes} | {draw_bar(question.outcome_probs[0], percentage_bar_len)} | {stake_no} |".strip()
         )
 
     click.echo(
-        f"\n| Nr \t| EndDate\t| Question{' '*(max_len - 8)} | StakeYes\t| Prices(Yes/No){' '*(percentage_bar_len + 10 -15)}| StakeNo\t\t|"
+        f"\n| Nr \t| EndDate\t| Question{' '*(max_len - 8)} | StakeYes   | Prices(Yes/No){' '*(percentage_bar_len + 10 -17)}| StakeNo    |"
     )
-    bars = f"|-------|---------------|---------{'-'*(max_len - 8)}-|----------------|{'-'*(percentage_bar_len + 10)}|------------------|"
+    bars = f"|-------|---------------|---------{'-'*(max_len - 8)}-|------------|{'-'*(percentage_bar_len + 10)}|------------|"
     click.echo(bars)
     click.echo("\n".join(options), color=True)
 

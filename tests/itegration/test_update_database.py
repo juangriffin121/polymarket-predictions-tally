@@ -116,5 +116,6 @@ def test_update_database_positions(monkeypatch):
     output = "User Alice had 1 right and 0 wrong"
     assert output.strip() in result.output.strip()
 
-    output = "NetProfit: \033[31m-12.0\033[0m"
+    # NetProfit: -12.0 
+    output = "NetProfit: \033[31m-12.0 \033[0m"
     assert output.strip() in result.output.strip()

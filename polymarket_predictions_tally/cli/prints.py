@@ -50,13 +50,14 @@ def inform_users_of_stocks_change(
         username = users[user_id].username
         click.echo(username)
         net_profit = 0.0
-        changes_whitespace = " " * (bar_length - len("NewPrices") + 14)
+        changes_whitespace = " " * (bar_length - len("NewPrices") + 8)
+        changes_line = "-" * (bar_length + 11)
 
         click.echo(
-            f"| Question{' '*(max_len - len('Question'))} | StakeYes | DeltaYes | NewPrices {changes_whitespace} | DeltaNo | StakeNo\t | Profit\t | Status\t |"
+            f"| Question{' '*(max_len - len('Question'))} | StakeYes   | DeltaYes | NewPrices {changes_whitespace} | DeltaNo | StakeNo    | Profit         | Status\t |"
         )
         click.echo(
-            f"|------------------------------|----------|----------|---------------------------|---------|-------------|---------------|---------------|"
+            f"|{'-'*(max_len+2)}|------------|----------|{changes_line}|---------|------------|----------------|---------------|"
         )
         for position in positions:
             # can fail in getting question by id
@@ -67,11 +68,15 @@ def inform_users_of_stocks_change(
             profit = delta_yes * position.stake_yes + delta_no * position.stake_no
             delta_yes_str = print_delta(delta_yes)
             delta_no_str = print_delta(delta_no)
+            stake_yes = str(round(position.stake_yes, 1))
+            stake_yes = f"{stake_yes}{' '*(10 - len(stake_yes))}"
+            stake_no = str(round(position.stake_no, 1))
+            stake_no = f"{stake_no}{' '*(10 - len(stake_no))}"
             status = (
                 "Sold " if position.question_id in resolved_question_ids else "Active"
             )
             click.echo(
-                f"| {new_question.question}{' '*(max_len - len(new_question.question))} | {position.stake_yes}\t  | {delta_yes_str}{' '*(len('StakeYes') - 4)} | {draw_bar(new_question.outcome_probs[0], bar_length)} | {delta_no_str}{' '*(len('DeltaNo') - 4)} | {position.stake_no}\t | {print_profit(profit)}\t | {status}\t |",
+                f"| {new_question.question}{' '*(max_len - len(new_question.question))} | {stake_yes} | {delta_yes_str}{' '*(len('DeltaYes') - 3)} | {draw_bar(new_question.outcome_probs[0], bar_length)} | {delta_no_str}{' '*(len('DeltaNo') - 3)} | {stake_no} | {print_profit(profit)}\t | {status}\t |",
                 color=True,
             )
             net_profit += profit
@@ -83,12 +88,16 @@ def print_delta(delta: float):
     return f"{sign}{abs(round(delta*100))}%"
 
 
-def print_profit(profit: float):
-    sign = "+" if profit > 0 else "-"
-    arrow = "" if profit > 0 else ""
-    color = "\033[32m" if profit > 0 else "\033[31m"  # green / red
+def print_profit(profit):
+    sign = "+" if profit > 0 else (" " if profit == 0.0 else "-")
+    arrow = "" if profit > 0 else (" " if profit == 0.0 else "")
+    color = (
+        "\033[32m" if profit > 0 else ("" if profit == 0.0 else "\033[31m")
+    )  # green / red
     reset = "\033[0m"
-    return f"{color}{sign}{abs(round(profit, 4))}{arrow}{reset}"
+    profit = f"{abs(round(profit, 1))}"
+    profit = f"{profit}{' '*(5 - len(profit))}"
+    return f"{color}{sign}{profit}{arrow}{reset}"
 
 
 def inform_stats_update():
@@ -152,6 +161,8 @@ def draw_bar(prob_yes, bar_length=20):
     red = "\033[91m"
     green = "\033[92m"
     reset = "\033[0m"
+    pad_yes = " " * (3 - len(str(percent_yes)))
+    pad_no = " " * (3 - len(str(percent_no)))
 
-    bar = f"{green}{percent_yes}%\t{'█' * cells_yes}{red}{'█' * cells_no} {percent_no}%\t{reset}"
+    bar = f"{green}{percent_yes}%{pad_yes}{'█' * cells_yes}{red}{'█' * cells_no} {percent_no}%{pad_no}{reset}"
     return bar

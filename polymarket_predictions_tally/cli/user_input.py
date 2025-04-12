@@ -129,9 +129,9 @@ def prompt_question_selection_for_bet(
         )
 
     click.echo(
-        f"\n| Nr \t| EndDate\t| Question{' '*(max_len - 8)} | StakeYes\t| Prices(Yes/No){' '*(percentage_bar_len + 10 - 11)}| StakeNo\t|"
+        f"\n| Nr \t| EndDate\t| Question{' '*(max_len - 8)} | StakeYes\t | Prices(Yes/No){' '*(percentage_bar_len + 10 - 14)}| StakeNo   |"
     )
-    bars = f"|-------|---------------|---------{'-'*(max_len - 8)}-|-----------|{'-'*(percentage_bar_len + 10 + 4)}|--------------|"
+    bars = f"|-------|---------------|---------{'-'*(max_len - 8)}-|------------|{'-'*(percentage_bar_len + 10 +1)}|-----------|"
     click.echo(bars)
     click.echo("\n".join(options), color=True)
 
@@ -240,9 +240,9 @@ def choose_position(
         )
 
     click.echo(
-        f"\n| Nr \t| EndDate\t| Question{' '*(max_len - 8)} | StakeYes   | Prices(Yes/No){' '*(percentage_bar_len + 10 -17)}| StakeNo    |"
+        f"\n| Nr \t| EndDate\t| Question{' '*(max_len - 8)} | StakeYes   | Prices(Yes/No){' '*(percentage_bar_len + 10 -14)}| StakeNo    |"
     )
-    bars = f"|-------|---------------|---------{'-'*(max_len - 8)}-|------------|{'-'*(percentage_bar_len + 10)}|------------|"
+    bars = f"|-------|---------------|---------{'-'*(max_len - 8)}-|------------|{'-'*(percentage_bar_len + 11)}|------------|"
     click.echo(bars)
     click.echo("\n".join(options), color=True)
 

@@ -17,6 +17,7 @@
         - [X] automatic stock sells upon market completion   
 - [ ] fzf integration
 - [x] implement user history 
+- [ ] test it myself a week before merging to main
 
 
 # Posible problems

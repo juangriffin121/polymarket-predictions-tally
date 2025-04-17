@@ -6,18 +6,24 @@
     - if a question is solved update all its responses and transactions and update users stats
     - notify of new stats of users 
 - [x] implement betting system
+    - [x] print user stats
+        - [x] prediction stats
+        - [ ] financial stats
+            - [ ] liquid budget vs full budget (liquid + \sum price_i stake_i) and table for each market
+    - [ ] remember what price stock was bought, so i know after multiple update database, what the full net profit was 
     - [x] cli
         - [x] transaction prompt
             - [x] main functionailty
             - [x] better prints
         - [x] portfolio choice to sell
+            - [ ] prompt to sell all stake for market (a) 
     - [x] perform transaction
     - [x] update database
         - [x] inform users of stock change upon updating
         - [X] automatic stock sells upon market completion   
 - [ ] fzf integration
 - [x] implement user history 
-- [ ] test it myself a week before merging to main
+- [x] test it myself a week before merging to main
 
 
 # Posible problems

@@ -51,6 +51,20 @@ After installation, you can use the `polytally` command from anywhere in your te
     polytally update
     ```
     Checks for newly resolved markets and updates user profits, losses, and prediction accuracy based on the latest data.
+
+- **Bet on most active markets**
+    ```bash
+    polytally bet [username]
+    ```
+    Prompts the user for a market to bet on, the user can bet on either yes or no, or sell if they have stake in either.
+
+- **Sell stake**
+    ```bash
+    polytally sell [username]
+    ```
+    Displays the user's currently active positions and allows them to sell or buy more in those markets
+
+
 - **View help information**
     ```bash
     polytally -h

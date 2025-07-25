@@ -296,6 +296,14 @@ def resolve_updated_positions(
                 )
                 perform_transaction(conn, sell_no, position, resolved_question)
 
+            # the position in db was updated but perform_transaction needs position from the program too(might have to change that) so im updating it if a transaction was performed
+            position = Position(
+                user_id=position.user_id,
+                question_id=position.question_id,
+                stake_yes=0.0,
+                stake_no=0.0,
+            )
+
             remove_position(conn, position)
 
 

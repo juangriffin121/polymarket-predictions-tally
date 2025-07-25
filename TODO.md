@@ -1,5 +1,8 @@
 # TODO
 
+- [ ] Solve the remove_question problems
+    - [X] make the file
+    - [ ] Test it
 - [X] tests for insert_user_by_name and replace insert_user
 - [X] implement update database
     - update questions
